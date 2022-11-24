@@ -20,13 +20,13 @@ int main(int argv, char** args){
 
     }  
 
-SDL_Event winEvent;
+SDL_Event windowEvent;
 
     while(true){
 
-        if (SDL_PollEvent(&winEvent)){
+        if (SDL_PollEvent(&windowEvent)){
 
-            if (SDL_QUIT == winEvent.type) { break; }
+            if (SDL_QUIT == windowEvent.type) { break; }
 
         }
 
