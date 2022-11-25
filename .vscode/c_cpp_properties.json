@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/src/include",
-                "${workspaceFolder}/src/lib"
+                "${workspaceFolder}/src/lib",
+                "${workspaceFolder}/src/jsoncpp/include"
             ],
             "defines": [
                 "_DEBUG",

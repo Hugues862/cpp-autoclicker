@@ -20,7 +20,7 @@
         public:
 
             /**
-              * @brief Construct a new Point object
+              * @brief Construct a new Point object with chosen X & Y pos
               * 
               * @param newX Default X position
               * @param newY Default Y position
@@ -28,6 +28,14 @@
             Point(int newX, int newY){
                 this->x = newX;
                 this->y = newY;
+            }
+
+            /**
+             * @brief Construct a new Point object with dynamic cursor position
+             * 
+             */
+            Point(){
+                SDL_GetGlobalMouseState(&this->x, &this->y);
             }
 
             // Getters
