@@ -15,34 +15,22 @@
 #CXX = clang++
 
 EXE = main
+IMGUI_DIR = src/imgui
 SOURCES = main.cpp
-
-IMGUI_DIR = imgui
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
-SOURCES += $(IMGUI_DIR)/backends/imgui_impl_sdl.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
-
-JSONCPP = src/jsoncpp
-SOURCES += $(JSONCPP)/dist/jsoncpp.cpp
+SOURCES += $(IMGUI_DIR)/backends/imgui_impl_sdl.cpp $(IMGUI_DIR)/backends/imgui_impl_sdlrenderer.cpp
+#ADDED SOURCES
+SOURCES += src/jsoncpp/dist/jsoncpp.cpp
 
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 UNAME_S := $(shell uname -s)
-LINUX_GL_LIBS = -lGL
 
-CXXFLAGS = -I src/classes
 CXXFLAGS = -std=c++11 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends
 CXXFLAGS += -g -Wall -Wformat
-LIBS =
+#ADDED FLAGS
+CXXFLAGS += -I src/ -I src/SDL/include -I src/classes -I src/jsoncpp/include
 
-##---------------------------------------------------------------------
-## OPENGL ES
-##---------------------------------------------------------------------
-
-## This assumes a GL ES library available in the system, e.g. libGLESv2.so
-# CXXFLAGS += -DIMGUI_IMPL_OPENGL_ES2
-# LINUX_GL_LIBS = -lGLESv2
-## If you're on a Raspberry Pi and want to use the legacy drivers,
-## use the following instead:
-# LINUX_GL_LIBS = -L/opt/vc/lib -lbrcmGLESv2
+LIBS = -L src/SDL/lib
 
 ##---------------------------------------------------------------------
 ## BUILD FLAGS PER PLATFORM
@@ -50,7 +38,7 @@ LIBS =
 
 ifeq ($(UNAME_S), Linux) #LINUX
 	ECHO_MESSAGE = "Linux"
-	LIBS += $(LINUX_GL_LIBS) -ldl `sdl2-config --libs`
+	LIBS += -lGL -ldl `sdl2-config --libs`
 
 	CXXFLAGS += `sdl2-config --cflags`
 	CFLAGS = $(CXXFLAGS)
@@ -67,11 +55,11 @@ ifeq ($(UNAME_S), Darwin) #APPLE
 endif
 
 ifeq ($(OS), Windows_NT)
-    ECHO_MESSAGE = "MinGW"
-    LIBS += -lgdi32 -lopengl32 -limm32 `pkg-config --static --libs sdl2`
+	ECHO_MESSAGE = "MinGW"
+	LIBS += -lgdi32 -lopengl32 -limm32 `pkg-config --static --libs sdl2`
 
-    CXXFLAGS += `pkg-config --cflags sdl2`
-    CFLAGS = $(CXXFLAGS)
+	CXXFLAGS += `pkg-config --cflags sdl2`
+	CFLAGS = $(CXXFLAGS)
 endif
 
 ##---------------------------------------------------------------------
@@ -87,6 +75,9 @@ endif
 %.o:$(IMGUI_DIR)/backends/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
+%.o:src/jsoncpp/dist/%.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
 all: $(EXE)
 	@echo Build complete for $(ECHO_MESSAGE)
 
@@ -95,35 +86,4 @@ $(EXE): $(OBJS)
 
 clean:
 	rm -f $(EXE) $(OBJS)
-
-
-all:
-
-windows: #! WORKING WINDOWS COMMAND
-	g++ -I src/ -I src/SDL/include -I src/classes -I src/jsoncpp/include -I src/imgui -I src/imgui/backends -Lsrc/SDL/lib -mwindows -o main main.cpp src/imgui/imgui.cpp src/imgui/imgui_demo.cpp src/imgui/imgui_draw.cpp src/imgui/imgui_tables.cpp src/imgui/imgui_widgets.cpp src/imgui/backends/imgui_impl_sdl.cpp src/imgui/backends/imgui_impl_opengl3.cpp src/jsoncpp/dist/jsoncpp.cpp -lgdi32 -lopengl32 -limm32 -lmingw32 -lSDL2main -lSDL2 
-
-windows: #* DETAILED COMMAND
-	g++
-	-I src/ -I src/SDL/include -I src/classes -I src/jsoncpp/include -I src/imgui -I src/imgui/backends 
-	-L src/SDL/lib
-	-mwindows
-	-o main
-	main.cpp
-	src/imgui/imgui.cpp src/imgui/imgui_demo.cpp src/imgui/imgui_draw.cpp src/imgui/imgui_tables.cpp src/imgui/imgui_widgets.cpp src/imgui/backends/imgui_impl_sdl.cpp src/imgui/backends/imgui_impl_opengl3.cpp src/jsoncpp/dist/jsoncpp.cpp
-	-lgdi32 -lopengl32 -limm32 -lmingw32 -lSDL2main -lSDL2 
-
-macOS:
-	clang++ -I /Library/Frameworks/SDL2.framework/Versions/A/Headers -I src/classes -I src/jsoncpp/include -L src/lib -o main main.cpp src/jsoncpp/dist/jsoncpp.cpp -SDL2
-
-clean:
-	rm -f main
-
-
-windows:
-	g++ -I -I src/classes src/SDL/include -I src/jsoncpp/include -L src/SDL/lib -o main main.cpp src/jsoncpp/dist/jsoncpp.cpp -lmingw32 -lSDL2main -lSDL2
-
-macOS:
-	clang++ -I /Library/Frameworks/SDL2.framework/Versions/A/Headers -I src/classes -I src/jsoncpp/include -L src/lib -o main main.cpp src/jsoncpp/dist/jsoncpp.cpp -SDL2
-
-clean:
-	rm -f main
+	
