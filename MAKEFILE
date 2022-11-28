@@ -56,9 +56,9 @@ endif
 
 ifeq ($(OS), Windows_NT)
 	ECHO_MESSAGE = "MinGW"
-	LIBS += -lgdi32 -lopengl32 -limm32 `pkg-config --static --libs sdl2`
+	LIBS += -lgdi32 -lopengl32 -limm32 -lmingw32 -lSDL2main -lSDL2 -mwindows
 
-	CXXFLAGS += `pkg-config --cflags sdl2`
+#   CXXFLAGS += -I src/SDL/include -I src/SDL/include/SDL2  -Dmain=SDL_main
 	CFLAGS = $(CXXFLAGS)
 endif
 
