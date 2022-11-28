@@ -4,8 +4,9 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/src/include",
-                "${workspaceFolder}/src/lib",
+                "${workspaceFolder}/src/SDL/include",
+                "${workspaceFolder}/src/SDL/lib",
+                "${workspaceFolder}/src/classes",
                 "${workspaceFolder}/src/jsoncpp/include"
             ],
             "defines": [

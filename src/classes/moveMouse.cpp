@@ -49,6 +49,43 @@ moveMouse::~moveMouse(){
     }
 
     this->movePos.clear();
+}
+
+void moveMouse::setMovePos(int index, Point newPoint){
+
+    this->movePos[index] = &newPoint;
+
+}
+
+Point moveMouse::getMovePos(int index){
+
+    return *(this->movePos[index]);
+
+}
+
+bool moveMouse::play(){
+    
+    SDL_Event event;
+
+    for (int i = 0; i <= this->movePos.size(); i++){
+        
+        if (SDL_PollEvent(&event)){ // Stops creation of object
+            
+            if(SDLK_ESCAPE == event.key.keysym.sym){ // Escape will throw exception and in turn destroy object
+
+                cout << "User Interruption" << endl;
+                return false;
+
+            }
+        
+        }
+
+        SDL_WarpMouseGlobal(this->movePos[i]->getX(),
+                            this->movePos[i]->getY());
+        
+    }
+
+    return true;
 
 }
 
