@@ -4,10 +4,11 @@
 #include "macro.hpp"
 #include <string> 
 
+
 class Windows {
+    
+    
     public:
-        ImVec4 *clear_color;
-        vector<Macro*> *macros;
 
 
         bool show_new_click_module_window = false;
@@ -26,24 +27,70 @@ class Windows {
         };
 
         int main_window() {
-        
+            const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+            
+            ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 0, main_viewport->WorkPos.y + 0), ImGuiCond_FirstUseEver);
+            ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
 
             ImGui::Begin("Autoclicker");                          // Create a window called "Hello, world!" and append into it.
 
             
+
+
+
             if (ImGui::Button("New")) {
                 show_new_click_module_window = true;
             };
+            ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
 
-            //Display the delay of the macros
-            cout >> macros->at(i)->delay >> endl;
+            ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+
+            ImGui::BeginChild("ListMacros", ImVec2(0, 0), true, window_flags);
             
-        
+            ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersH | ImGuiTableFlags_BordersOuterH
+             | ImGuiTableFlags_BordersInnerH | ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuterV | ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersInner | ImGuiTableFlags_PadOuterX;
 
+
+            if (ImGui::BeginTable("Macros", 2, flags))
+            {
+                // Display headers so we can inspect their interaction with borders.
+                // (Headers are not the main purpose of this section of the demo, so we are not elaborating on them too much. See other sections for details)
+
+
+
+                for (int row = 0; row < 10; row++)
+                {
+                    ImGui::TableNextRow();
+                    //COL 1
+                    ImGui::TableNextColumn();
+                    ImGui::Text("%d |", row); ImGui::SameLine();
+                    ImGui::Text(" %s", "Macro Title"); ImGui::SameLine();
+
+                    //COL 2
+                    ImGui::TableNextColumn();
+                    if (ImGui::Button("EDIT")) {
+                        std::cout << "EDIT" << std::endl;
+                    }; ImGui::SameLine();
+                    if (ImGui::Button("DUPLICATE")) {
+                        std::cout << "DUPE" << std::endl;
+                    };
+                    if (ImGui::Button("DELETE")) {
+                        std::cout << "DELETE" << std::endl;
+                    };
+
+                        
+                    // 
+                }
+                ImGui::EndTable();
+            
+            };
+
+            ImGui::EndChild();
+            ImGui::PopStyleVar();
             ImGui::End();
-
             return 0;
         };
+
 
         int new_click_module_window() {
             if (show_new_click_module_window) {

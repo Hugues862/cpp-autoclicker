@@ -26,17 +26,13 @@ class Gui {
         Gui(bool DEBUG = true) {
             
             this->DEBUG = DEBUG;
-            windows.clear_color = &clear_color;
             
-
-            
-            
-            macros.push_back(new Macro);
-            windows.macros = &macros;
 
             initial_SDL();
             initial_ImGui();
 
+            ImGuiIO& io = ImGui::GetIO();
+            io.Fonts->AddFontFromFileTTF("src/imgui/misc/fonts/Roboto-Medium.ttf", 18.0f);
             main_loop();
             
         }
@@ -91,6 +87,7 @@ class Gui {
             ImGui_ImplSDL2_InitForSDLRenderer(window, renderer);
             ImGui_ImplSDLRenderer_Init(renderer);
 
+
             return 0;
         }
 
@@ -122,6 +119,12 @@ class Gui {
                 ImGui_ImplSDLRenderer_NewFrame();
                 ImGui_ImplSDL2_NewFrame();
                 ImGui::NewFrame();
+
+
+
+                
+
+
 
                 //WINDOWS
                 windows.demo_window();
