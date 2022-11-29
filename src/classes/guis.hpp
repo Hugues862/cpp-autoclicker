@@ -27,10 +27,12 @@ class Gui {
             
             this->DEBUG = DEBUG;
             windows.clear_color = &clear_color;
+            
 
             
             
-            // macros.push_back(new Macro);
+            macros.push_back(new Macro);
+            windows.macros = &macros;
 
             initial_SDL();
             initial_ImGui();

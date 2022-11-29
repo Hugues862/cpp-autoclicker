@@ -1,11 +1,15 @@
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_sdlrenderer.h"
+#include "macro.hpp"
+#include <string> 
 
 class Windows {
     public:
         ImVec4 *clear_color;
-        
+        vector<Macro*> *macros;
+
+
         bool show_new_click_module_window = false;
 
         Windows() {
@@ -31,7 +35,9 @@ class Windows {
                 show_new_click_module_window = true;
             };
 
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+            //Display the delay of the macros
+            cout >> macros->at(i)->delay >> endl;
+            
         
 
             ImGui::End();
