@@ -4,6 +4,8 @@
 #include <cstring>
 #include "macro.hpp"
 #include <vector>
+#include "click.hpp"
+
 
 class Gui {
     public:
