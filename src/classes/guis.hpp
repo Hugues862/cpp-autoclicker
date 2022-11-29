@@ -1,7 +1,8 @@
 #include <SDL.h>
 #include <iostream>
 #include "windows.hpp"
-
+#include <cstring>
+#include "point.hpp"
 
 
 class Gui {
@@ -17,16 +18,17 @@ class Gui {
 
         Windows windows;
 
+
         Gui(bool DEBUG = true) {
             
             this->DEBUG = DEBUG;
+            windows.clear_color = &clear_color;
+
 
             initial_SDL();
             initial_ImGui();
 
             main_loop();
-
-
             
         }
 
@@ -107,7 +109,17 @@ class Gui {
                         main_loop_alive = false;
                 }
 
+
+                ImGui_ImplSDLRenderer_NewFrame();
+                ImGui_ImplSDL2_NewFrame();
+                ImGui::NewFrame();
+
+                //WINDOWS
+                windows.demo_window();
+
                 windows.main_window();
+                windows.new_click_module_window();
+
 
                 rendering();
             }

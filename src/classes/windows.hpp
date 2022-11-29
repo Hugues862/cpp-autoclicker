@@ -4,13 +4,48 @@
 
 class Windows {
     public:
-        int main_window() {
-            ImGui_ImplSDLRenderer_NewFrame();
-            ImGui_ImplSDL2_NewFrame();
-            ImGui::NewFrame();
+        ImVec4 *clear_color;
+        
+        bool show_new_click_module_window = false;
 
+        Windows() {
+            
+        };
+
+
+        int demo_window() {
+            
 
             ImGui::ShowDemoWindow();
+
+            return 0;
+        };
+
+        int main_window() {
+            static float f = 0.0f;
+            
+
+
+            ImGui::Begin("Autoclicker");                          // Create a window called "Hello, world!" and append into it.
+
+            
+            if (ImGui::Button("New")) {
+                show_new_click_module_window = true;
+            };
+
+            ImGui::End();
+
+            return 0;
+        };
+
+        int new_click_module_window() {
+            if (show_new_click_module_window) {
+                ImGui::Begin("New Click Module", &show_new_click_module_window);
+                ImGui::Text("Hello from another window!");
+                if (ImGui::Button("Close Me"))
+                    show_new_click_module_window = false;
+                ImGui::End();
+            }
 
             return 0;
         };
