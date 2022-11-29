@@ -38,8 +38,8 @@ class Gui {
             io.Fonts->AddFontFromFileTTF("src/imgui/misc/fonts/Roboto-Medium.ttf", 18.0f, &font_config);
             // io.Fonts->AddFontDefault();
 
-            io.IniFilename = NULL;
-            io.LogFilename = NULL;
+            // io.IniFilename = NULL;
+            // io.LogFilename = NULL;
 
             main_loop();
             
@@ -129,6 +129,7 @@ class Gui {
                 ImGui::NewFrame();
 
                 //WINDOWS
+                ImGui::ShowStackToolWindow();
                 windows.demo_window();
 
                 windows.main_window();
