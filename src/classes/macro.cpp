@@ -1,6 +1,12 @@
 #include <macro.hpp>
 
-Macro::Macro(){
+Macro::Macro() {
+    this->loop = false;
+    this->delay = 0;
+    
+}
+
+void Macro::Record(){
 
     // SDL_CaptureMouse(SDL_TRUE);
     SDL_Event event;

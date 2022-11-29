@@ -14,20 +14,21 @@
      */
     class Macro{
 
-        protected:
+        public:
+            bool loop;
+            int delay;
+
 
             vector<Click*> movePos; // Store the movement of the mouse
 
-            int delay = 0;
-            bool loop = false;
 
-        public:
             /**
              * @brief Creates object while registering every cursor position in a time frame
              * 
              */
             Macro();
-            
+
+
             /**
              * @brief Load a Macro object from a Json file
              * 
@@ -79,6 +80,9 @@
              * @return Json::Value with the data of the object
              */
             Json::Value Save(Json::Value &out); // Save data with out stream //! https://stackoverflow.com/questions/32205981/reading-json-files-in-c
+
+            void Record();
+            
 
     };
 

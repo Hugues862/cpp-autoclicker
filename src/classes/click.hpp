@@ -11,19 +11,17 @@
      * @brief Object representing a point on the screen through coordinates
      * 
      */
+
+
     class Click {
 
-        protected:
+        public:
+            
             int x;
             int y;
-
             Uint32 button;
+            int delay;
 
-            int clicks = 1;
-            int delay = 0;
-            bool loop = false;
-
-        public:
 
             /**
               * @brief Construct a new Click object with chosen X & Y pos
@@ -47,13 +45,11 @@
             // Getters
             int getX(){ return this->x; }
             int getY(){ return this->y; }
-            int getClicks() { return this->clicks; }
             Uint32 getButton() { return this->button; }
 
             // Setters
             void setX(int newX){ this->x = newX; }
             void setY(int newY){ this->y = newY; }
-            void setClicks(int num) { this->clicks = num; }
             void setButton(Uint32 chgButton) { this->button = chgButton; }
     };
 

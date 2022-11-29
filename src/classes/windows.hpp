@@ -22,9 +22,7 @@ class Windows {
         };
 
         int main_window() {
-            static float f = 0.0f;
-            
-
+        
 
             ImGui::Begin("Autoclicker");                          // Create a window called "Hello, world!" and append into it.
 
@@ -32,6 +30,9 @@ class Windows {
             if (ImGui::Button("New")) {
                 show_new_click_module_window = true;
             };
+
+            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+        
 
             ImGui::End();
 

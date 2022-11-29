@@ -2,8 +2,8 @@
 #include <iostream>
 #include "windows.hpp"
 #include <cstring>
-#include "point.hpp"
-
+#include "macro.hpp"
+#include <vector>
 
 class Gui {
     public:
@@ -18,12 +18,17 @@ class Gui {
 
         Windows windows;
 
+        vector<Macro*> macros;
+
 
         Gui(bool DEBUG = true) {
             
             this->DEBUG = DEBUG;
             windows.clear_color = &clear_color;
 
+            
+            
+            // macros.push_back(new Macro);
 
             initial_SDL();
             initial_ImGui();
