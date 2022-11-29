@@ -81,6 +81,8 @@ endif
 
 all: $(EXE)
 	@echo Build complete for $(ECHO_MESSAGE)
+	rm -f main.o
+	
 
 $(EXE): $(OBJS)
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(LIBS)
