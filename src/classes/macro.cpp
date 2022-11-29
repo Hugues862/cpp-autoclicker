@@ -1,11 +1,17 @@
-#include <moveMouse.hpp>
+#include <macro.hpp>
 
-moveMouse::moveMouse(){
+Macro::Macro(){
 
     // SDL_CaptureMouse(SDL_TRUE);
     SDL_Event event;
 
+    // int button;
+    // vector<Click>::iterator index;
+
     cout << "Begin Capture of cursor movement." << endl;
+
+    this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
+    this->movePos.push_back(new Click); // Add first pointer to new Click object with starting global coordinates of cursor
 
     while(true){
 
@@ -25,45 +31,49 @@ moveMouse::moveMouse(){
 
             }
 
-        }
+            else if(SDL_MOUSEMOTION == event.type || SDL_MOUSEBUTTONDOWN == event.type){ // Wait for Mouse Movement or Mouse Click
 
-        this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
-        this->movePos.push_back(new Point); // Add pointer to new Point object with current global coordinates of cursor
+                this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
+                this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
+
+            }
+
+        }
 
     }
 
 }
 
-moveMouse::moveMouse(Json::Value loader){
+Macro::Macro(Json::Value loader){
 
     this->Load(loader);
 
 }
 
-moveMouse::~moveMouse(){
+Macro::~Macro(){
 
     for (int i = 0; i < this->movePos.size(); i++){
 
-        delete this->movePos[i]; // Delete every Point object movePos is pointing to
+        delete this->movePos[i]; // Delete every Click object movePos is pointing to
     
     }
 
     this->movePos.clear();
 }
 
-void moveMouse::setMovePos(int index, Point newPoint){
+void Macro::setMovePos(int index, Click newClick){
 
-    this->movePos[index] = &newPoint;
+    this->movePos[index] = &newClick;
 
 }
 
-Point moveMouse::getMovePos(int index){
+Click Macro::getMovePos(int index){
 
     return *(this->movePos[index]);
 
 }
 
-bool moveMouse::play(){
+bool Macro::play(){
     
     SDL_Event event;
 
@@ -89,7 +99,7 @@ bool moveMouse::play(){
 
 }
 
-void moveMouse::Load(Json::Value &in){
+void Macro::Load(Json::Value &in){
 
     int size = in["movePos"].size();
 
@@ -97,14 +107,14 @@ void moveMouse::Load(Json::Value &in){
 
     for (int i = 0; i < size; i++){
 
-        this->movePos.push_back(new Point);
+        this->movePos.push_back(new Click);
         this->movePos[i]->setX(in["movePos"][i]["x"].asInt());
         this->movePos[i]->setY(in["movePos"][i]["y"].asInt());
 
     }
 }
 
-Json::Value moveMouse::Save(Json::Value &out){
+Json::Value Macro::Save(Json::Value &out){
 
     Json::Reader read;
     Json::Value root;

@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <SDL.h>
 
+
 const int WIN_WIDTH = 800, WIN_HEIGHT = 600;
 
 int main(int argv, char** args){

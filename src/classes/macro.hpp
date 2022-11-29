@@ -1,7 +1,7 @@
-#ifndef MOVE_MOUSE_HPP_
-    #define MOVE_MOUSE_HPP_
+#ifndef MACRO_HPP_
+    #define MACRO_HPP_
 
-    #include <point.hpp>
+    #include <click.hpp>
     #include <string>
     #include <json/json.h>
     #include <fstream>
@@ -12,47 +12,50 @@
      * @brief Object with control over the cursor's movement
      * 
      */
-    class moveMouse{
+    class Macro{
 
         protected:
 
-            vector<Point*> movePos; // Store the movement of the mouse
+            vector<Click*> movePos; // Store the movement of the mouse
+
+            int delay = 0;
+            bool loop = false;
 
         public:
             /**
              * @brief Creates object while registering every cursor position in a time frame
              * 
              */
-            moveMouse();
+            Macro();
             
             /**
-             * @brief Load a moveMouse object from a Json file
+             * @brief Load a Macro object from a Json file
              * 
              * @param loader Json value of the object
              */
-            moveMouse(Json::Value loader);
+            Macro(Json::Value loader);
 
             /**
-             * @brief Destroy the moveMouse object
+             * @brief Destroy the Macro object
              * 
              */
-            ~moveMouse();
+            ~Macro();
             
             /**
-             * @brief Set the Point object in the movePos vector at a specific index
+             * @brief Set the Click object in the movePos vector at a specific index
              * 
              * @param index Index of the vector
-             * @param newPoint New assigned Point
+             * @param newClick New assigned Click
              */
-            void setMovePos(int index, Point newPoint);
+            void setMovePos(int index, Click newClick);
 
             /**
-             * @brief Get the Point object in the movePos vector at a specific index
+             * @brief Get the Click object in the movePos vector at a specific index
              * 
              * @param index Index of the vector
-             * @return Point object
+             * @return Click object
              */
-            Point getMovePos(int index);
+            Click getMovePos(int index);
 
             /**
              * @brief Replays the movement of the mouse registered in the vector movePos
@@ -63,7 +66,7 @@
             bool play();
 
             /**
-             * @brief Loads an moveMouse object from a Json file
+             * @brief Loads an Macro object from a Json file
              * 
              * @param in Json file containing the object to load
              */
@@ -79,4 +82,4 @@
 
     };
 
-#endif /* !MOVE_MOUSE_HPP_ */
+#endif /* !MACRO_HPP_ */
