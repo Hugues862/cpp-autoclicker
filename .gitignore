@@ -34,3 +34,7 @@
 # Other files
 *.ini
 .vscode/*
+.vscode/settings.json
+.gitignore
+imgui.ini
+.vscode/c_cpp_properties.json
