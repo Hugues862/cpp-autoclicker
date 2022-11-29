@@ -53,8 +53,6 @@ class Windows {
 
             if (ImGui::BeginTable("Macros", 2, flags))
             {
-                // Display headers so we can inspect their interaction with borders.
-                // (Headers are not the main purpose of this section of the demo, so we are not elaborating on them too much. See other sections for details)
 
 
 

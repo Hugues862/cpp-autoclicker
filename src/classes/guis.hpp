@@ -31,8 +31,15 @@ class Gui {
             initial_SDL();
             initial_ImGui();
 
+            //Font Configuration
+            ImFontConfig font_config;
+            font_config.OversampleH = 1;
+            font_config.OversampleV = 1;
+
             ImGuiIO& io = ImGui::GetIO();
-            io.Fonts->AddFontFromFileTTF("src/imgui/misc/fonts/Roboto-Medium.ttf", 18.0f);
+            io.Fonts->AddFontFromFileTTF("src/imgui/misc/fonts/Roboto-Medium.ttf", 18.0f, &font_config);
+            // io.Fonts->AddFontDefault();
+
             main_loop();
             
         }
@@ -47,7 +54,7 @@ class Gui {
 
             // Setup window
             window_flags = (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-            window = SDL_CreateWindow("Dear ImGui SDL2+SDL_Renderer example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+            window = SDL_CreateWindow("Dear ImGui SDL2+SDL_Renderer example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1200, 900, window_flags);
             if (NULL == window){
                 std::cout << "Couldn't create the window" << std::endl << SDL_GetError() << std::endl;
                 return 0;
@@ -119,12 +126,6 @@ class Gui {
                 ImGui_ImplSDLRenderer_NewFrame();
                 ImGui_ImplSDL2_NewFrame();
                 ImGui::NewFrame();
-
-
-
-                
-
-
 
                 //WINDOWS
                 windows.demo_window();
