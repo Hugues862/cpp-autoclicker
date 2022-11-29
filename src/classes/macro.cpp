@@ -1,10 +1,12 @@
 #include <macro.hpp>
+#include <cstring>
 
 Macro::Macro() {
-
-    this->name = (char*)"My Macro";
+    string _name = "My Macro";
+    strcpy(name, _name.c_str());
     this->loop = false;
     this->delay = 0;
+
     
 }
 

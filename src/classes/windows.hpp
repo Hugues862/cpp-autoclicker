@@ -11,7 +11,10 @@ class Windows {
     public:
 
         vector<Macro*> macros;
-        bool show_new_click_module_window = false;
+
+        bool display_edit_module_window = false;
+        int selected_macro = 0;
+
 
         Windows() {
             
@@ -30,7 +33,7 @@ class Windows {
             const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
             
             ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 0, main_viewport->WorkPos.y + 0), ImGuiCond_FirstUseEver);
-            ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
+            ImGui::SetNextWindowSize(ImVec2(600, 300), ImGuiCond_FirstUseEver);
 
             ImGui::Begin("Autoclicker");                          // Create a window called "Hello, world!" and append into it.
 
@@ -39,7 +42,6 @@ class Windows {
 
 
             if (ImGui::Button("New")) {
-                show_new_click_module_window = true;
 
                 macros.push_back(new Macro);
             };
@@ -57,29 +59,63 @@ class Windows {
             if (ImGui::BeginTable("Macros", 2, flags))
             {
 
+                vector<Macro*>::iterator it;
 
-
-                for (int row = 0; row < (int)macros.size(); row++)
+                int row = 0;
+                for (it = macros.begin(); it != macros.end(); it++)
                 {
+                    int color_modifier = 0;
                     ImGui::TableNextRow();
                     //COL 1
                     ImGui::TableNextColumn();
                     ImGui::Text("%d |", row); ImGui::SameLine();
-                    ImGui::Text(" %s", macros[row]->name); ImGui::SameLine();
+                    ImGui::PushID(row);
+                    ImGui::InputText("##title", (*it)->name, 64);
+                    ImGui::PopID();
 
                     //COL 2
                     ImGui::TableNextColumn();
+                    
+                    //EDIT BTN
+                    //Color Yellow
+                    color_modifier = 1;
+                    ImGui::PushID(color_modifier);
+                    ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(color_modifier / 7.0f, 0.6f, 0.6f));
+                    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(color_modifier / 7.0f, 0.7f, 0.7f));
+                    ImGui::PopID();
+                    ImGui::PushID(row);
                     if (ImGui::Button("EDIT")) {
-                        std::cout << "EDIT" << std::endl;
-                    }; ImGui::SameLine();
-                    if (ImGui::Button("DUPLICATE")) {
-                        std::cout << "DUPE" << std::endl;
+                        display_edit_module_window = true;
+                        selected_macro = row;
                     };
-                    if (ImGui::Button("DELETE")) {
-                        std::cout << "DELETE" << std::endl;
-                    };
+                    ImGui::PopID();
+                    ImGui::PopStyleColor(2);
+                    ImGui::SameLine();
 
-                        
+                    //DUPLICATE BTN
+                    ImGui::PushID(row);
+                    if (ImGui::Button("DUPLICATE")) {
+                        std::cout << "DUPE " << row << std::endl;
+                    };
+                    ImGui::PopID();
+                    ImGui::SameLine();
+
+
+                    //DELETE BTN
+                    //Color Red
+                    color_modifier = 0;
+                    ImGui::PushID(color_modifier);
+                    ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(color_modifier / 7.0f, 0.6f, 0.6f));
+                    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(color_modifier / 7.0f, 0.7f, 0.7f));
+                    ImGui::PopID();
+                    ImGui::PushID(row);
+                    if (ImGui::Button("DELETE")) {
+                        macros.erase(it);
+                    };
+                    ImGui::PopID();
+                    ImGui::PopStyleColor(2);
+
+                    row++;
                     // 
                 }
                 ImGui::EndTable();
@@ -93,12 +129,12 @@ class Windows {
         };
 
 
-        int new_click_module_window() {
-            if (show_new_click_module_window) {
-                ImGui::Begin("New Click Module", &show_new_click_module_window);
+        int edit_module_window() {
+            if (display_edit_module_window) {
+                ImGui::Begin("New Click Module", &display_edit_module_window);
                 ImGui::Text("Hello from another window!");
                 if (ImGui::Button("Close Me"))
-                    show_new_click_module_window = false;
+                    display_edit_module_window = false;
                 ImGui::End();
             }
 

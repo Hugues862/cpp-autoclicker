@@ -38,6 +38,9 @@ class Gui {
             io.Fonts->AddFontFromFileTTF("src/imgui/misc/fonts/Roboto-Medium.ttf", 18.0f, &font_config);
             // io.Fonts->AddFontDefault();
 
+            io.IniFilename = NULL;
+            io.LogFilename = NULL;
+
             main_loop();
             
         }
@@ -129,7 +132,7 @@ class Gui {
                 windows.demo_window();
 
                 windows.main_window();
-                windows.new_click_module_window();
+                windows.edit_module_window();
 
 
                 rendering();
