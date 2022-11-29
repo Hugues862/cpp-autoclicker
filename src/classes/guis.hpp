@@ -2,7 +2,7 @@
 #include <iostream>
 #include "windows.hpp"
 #include <cstring>
-#include "point.hpp"
+#include "click.hpp"
 
 
 class Gui {
