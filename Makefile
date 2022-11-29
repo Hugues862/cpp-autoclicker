@@ -52,6 +52,7 @@ ifeq ($(UNAME_S), Darwin) #APPLE
 	CXXFLAGS += `sdl2-config --cflags`
 	CXXFLAGS += -I/usr/local/include -I/opt/local/include
 	CFLAGS = $(CXXFLAGS)
+	ADDITIONAL_CMD = rm -f main.o
 endif
 
 ifeq ($(OS), Windows_NT)
@@ -61,6 +62,7 @@ ifeq ($(OS), Windows_NT)
 	CXXFLAGS += -I src/SDL/include/SDL2 -I src/SDL/include
 #   CXXFLAGS += -I src/SDL/include -I src/SDL/include/SDL2  -Dmain=SDL_main
 	CFLAGS = $(CXXFLAGS)
+	ADDITIONAL_CMD = 
 endif
 
 ##---------------------------------------------------------------------
@@ -81,7 +83,7 @@ endif
 
 all: $(EXE)
 	@echo Build complete for $(ECHO_MESSAGE)
-	rm -f main.o
+	$(ADDITIONAL_CMD)
 	
 
 $(EXE): $(OBJS)
