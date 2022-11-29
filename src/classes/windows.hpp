@@ -10,7 +10,7 @@ class Windows {
     
     public:
 
-
+        vector<Macro*> macros;
         bool show_new_click_module_window = false;
 
         Windows() {
@@ -40,7 +40,10 @@ class Windows {
 
             if (ImGui::Button("New")) {
                 show_new_click_module_window = true;
+
+                macros.push_back(new Macro);
             };
+
             ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
 
             ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
@@ -56,13 +59,13 @@ class Windows {
 
 
 
-                for (int row = 0; row < 10; row++)
+                for (int row = 0; row < (int)macros.size(); row++)
                 {
                     ImGui::TableNextRow();
                     //COL 1
                     ImGui::TableNextColumn();
                     ImGui::Text("%d |", row); ImGui::SameLine();
-                    ImGui::Text(" %s", "Macro Title"); ImGui::SameLine();
+                    ImGui::Text(" %s", macros[row]->name); ImGui::SameLine();
 
                     //COL 2
                     ImGui::TableNextColumn();

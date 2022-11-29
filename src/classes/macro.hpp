@@ -15,6 +15,7 @@
     class Macro{
 
         public:
+            char* name;
             bool loop;
             int delay;
 

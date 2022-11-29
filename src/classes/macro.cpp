@@ -1,9 +1,66 @@
 #include <macro.hpp>
 
 Macro::Macro() {
+
+    this->name = (char*)"My Macro";
     this->loop = false;
     this->delay = 0;
     
+}
+
+Macro::Macro(Json::Value loader){
+
+    this->Load(loader);
+
+}
+
+Macro::~Macro(){
+
+    for (int i = 0; i < (int)this->movePos.size(); i++){
+
+        delete this->movePos[i]; // Delete every Click object movePos is pointing to
+    
+    }
+
+    this->movePos.clear();
+}
+
+void Macro::setMovePos(int index, Click newClick){
+
+    this->movePos[index] = &newClick;
+
+}
+
+Click Macro::getMovePos(int index){
+
+    return *(this->movePos[index]);
+
+}
+
+bool Macro::play(){
+    
+    SDL_Event event;
+
+    for (int i = 0; i <= (int)this->movePos.size(); i++){
+        
+        if (SDL_PollEvent(&event)){ // Stops creation of object
+            
+            if(SDLK_ESCAPE == event.key.keysym.sym){ // Escape will throw exception and in turn destroy object
+
+                cout << "User Interruption" << endl;
+                return false;
+
+            }
+        
+        }
+
+        SDL_WarpMouseGlobal(this->movePos[i]->getX(),
+                            this->movePos[i]->getY());
+        
+    }
+
+    return true;
+
 }
 
 void Macro::Record(){
@@ -50,61 +107,6 @@ void Macro::Record(){
 
 }
 
-Macro::Macro(Json::Value loader){
-
-    this->Load(loader);
-
-}
-
-Macro::~Macro(){
-
-    for (int i = 0; i < this->movePos.size(); i++){
-
-        delete this->movePos[i]; // Delete every Click object movePos is pointing to
-    
-    }
-
-    this->movePos.clear();
-}
-
-void Macro::setMovePos(int index, Click newClick){
-
-    this->movePos[index] = &newClick;
-
-}
-
-Click Macro::getMovePos(int index){
-
-    return *(this->movePos[index]);
-
-}
-
-bool Macro::play(){
-    
-    SDL_Event event;
-
-    for (int i = 0; i <= this->movePos.size(); i++){
-        
-        if (SDL_PollEvent(&event)){ // Stops creation of object
-            
-            if(SDLK_ESCAPE == event.key.keysym.sym){ // Escape will throw exception and in turn destroy object
-
-                cout << "User Interruption" << endl;
-                return false;
-
-            }
-        
-        }
-
-        SDL_WarpMouseGlobal(this->movePos[i]->getX(),
-                            this->movePos[i]->getY());
-        
-    }
-
-    return true;
-
-}
-
 void Macro::Load(Json::Value &in){
 
     int size = in["movePos"].size();
@@ -141,7 +143,7 @@ Json::Value Macro::Save(Json::Value &out){
 
     json.append("},"); // end of object
 
-    bool parseSuccess = read.parse(json, root, false);
+    read.parse(json, root, false);
     out.append(root);
 
     return root;

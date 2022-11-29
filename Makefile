@@ -21,6 +21,7 @@ SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_sdl.cpp $(IMGUI_DIR)/backends/imgui_impl_sdlrenderer.cpp
 #ADDED SOURCES
 SOURCES += src/jsoncpp/dist/jsoncpp.cpp
+SOURCES += src/classes/macro.cpp
 
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 UNAME_S := $(shell uname -s)
@@ -31,6 +32,7 @@ CXXFLAGS += -g -Wall -Wformat
 CXXFLAGS += -I src/ -I src/classes -I src/jsoncpp/include 
 
 LIBS = -L src/SDL/lib
+CLEAN = 
 
 ##---------------------------------------------------------------------
 ## BUILD FLAGS PER PLATFORM
@@ -53,6 +55,8 @@ ifeq ($(UNAME_S), Darwin) #APPLE
 	CXXFLAGS += -I/usr/local/include -I/opt/local/include
 	CFLAGS = $(CXXFLAGS)
 	ADDITIONAL_CMD = rm -f main.o
+
+	CLEAN += rm -f $(OBJS)
 endif
 
 ifeq ($(OS), Windows_NT)
@@ -63,6 +67,8 @@ ifeq ($(OS), Windows_NT)
 #   CXXFLAGS += -I src/SDL/include -I src/SDL/include/SDL2  -Dmain=SDL_main
 	CFLAGS = $(CXXFLAGS)
 	ADDITIONAL_CMD = 
+
+	CLEAN += del *.o
 endif
 
 ##---------------------------------------------------------------------
@@ -81,6 +87,9 @@ endif
 %.o:src/jsoncpp/dist/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
+%.o:src/classes/%.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
 all: $(EXE)
 	@echo Build complete for $(ECHO_MESSAGE)
 	$(ADDITIONAL_CMD)
@@ -90,5 +99,5 @@ $(EXE): $(OBJS)
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(LIBS)
 
 clean:
-	rm -f $(EXE) $(OBJS)
+	$(CLEAN)
 	

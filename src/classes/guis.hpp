@@ -20,8 +20,6 @@ class Gui {
 
         Windows windows;
 
-        vector<Macro*> macros;
-
 
         Gui(bool DEBUG = true) {
             
