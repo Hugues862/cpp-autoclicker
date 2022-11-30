@@ -82,7 +82,7 @@
              */
             Json::Value Save(Json::Value &out); // Save data with out stream //! https://stackoverflow.com/questions/32205981/reading-json-files-in-c
 
-            void Record();
+            void record();
             
 
     };

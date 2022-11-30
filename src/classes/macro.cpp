@@ -45,14 +45,14 @@ Click Macro::getMovePos(int index){
 
 bool Macro::play(){
 
-    INPUT input[this->movePos.size()] = {};
+    INPUT input[this->movePos.size()] = {}; //! Not freed, possible memory leak ?
     ZeroMemory(input, sizeof(input));
 
     for (int i = 0; i <= (int)this->movePos.size(); i++){
         
         input[i] = this->movePos[i]->getInput();
             
-        if(GetKeyState(VK_ESCAPE)){ // Escape will throw exception and in turn destroy object
+        if(GetAsyncKeyState(VK_ESCAPE)){ // Escape will throw exception and in turn destroy object
 
             cout << "User Interruption" << endl;
             return false;
@@ -71,7 +71,7 @@ bool Macro::play(){
 
 }
 
-void Macro::Record(){
+void Macro::record(){
 
     // SDL_CaptureMouse(SDL_TRUE);
     // SDL_Event event;
@@ -88,14 +88,14 @@ void Macro::Record(){
 
     while(true){
 
-        if(GetKeyState(VK_ESCAPE)){ // Escape will throw exception and in turn destroy object
+        if(GetAsyncKeyState(VK_ESCAPE)){ // Escape will throw exception and in turn destroy object
 
             cout << "User Interruption" << endl;
             throw exception{};
 
         }
 
-        else if(GetKeyState(VK_SPACE)){ // Space will stop registering mouse movement and confirm creation of object
+        else if(GetAsyncKeyState(VK_SPACE)){ // Space will stop registering mouse movement and confirm creation of object
             
             // SDL_CaptureMouse(SDL_FALSE);
             cout << "End Capture of cursor movement." << endl;
@@ -103,7 +103,7 @@ void Macro::Record(){
 
         }
 
-        else if(GetKeyState(WM_MOUSEMOVE)){ // Wait for Mouse Movement or Mouse Click
+        else if(GetAsyncKeyState(WM_MOUSEMOVE)){ // Wait for Mouse Movement or Mouse Click
 
             this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
             this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state

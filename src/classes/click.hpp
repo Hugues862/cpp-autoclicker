@@ -38,55 +38,55 @@
                 
                 //! Checks for clicks
 
-                if (HIBYTE(GetKeyState(VK_LBUTTON)) == 1){
+                if (GetAsyncKeyState(VK_LBUTTON)){
                     left = true;
                     event.mi.dwFlags += MOUSEEVENTF_LEFTDOWN;
                 }
 
-                else if (HIBYTE(GetKeyState(VK_LBUTTON)) != 1){
+                else if (!GetAsyncKeyState(VK_LBUTTON)){
                     left = false;
                     event.mi.dwFlags += MOUSEEVENTF_LEFTUP;
                 }
 
-                if (HIBYTE(GetKeyState(VK_RBUTTON)) == 1){
+                if (GetAsyncKeyState(VK_RBUTTON)){
                     right = true;
                     event.mi.dwFlags += MOUSEEVENTF_RIGHTDOWN;
                 }
 
-                else if (HIBYTE(GetKeyState(VK_RBUTTON)) != 1){
+                else if (!GetAsyncKeyState(VK_RBUTTON)){
                     right = false;
                     event.mi.dwFlags += MOUSEEVENTF_RIGHTUP;
                 }
 
-                if (HIBYTE(GetKeyState(VK_MBUTTON)) == 1){
+                if (GetAsyncKeyState(VK_MBUTTON)){
                     mid = true;
                     event.mi.dwFlags += MOUSEEVENTF_MIDDLEDOWN;
                 }
 
-                else if (HIBYTE(GetKeyState(VK_MBUTTON)) != 1){
+                else if (!GetAsyncKeyState(VK_MBUTTON)){
                     mid = false;
                     event.mi.dwFlags += MOUSEEVENTF_MIDDLEUP;
                 }
 
-                if (HIBYTE(GetKeyState(VK_XBUTTON1)) == 1){
+                if (GetAsyncKeyState(VK_XBUTTON1)){
                     x1 = true;
                     event.mi.dwFlags += MOUSEEVENTF_XDOWN;
                     event.mi.mouseData += XBUTTON1;
                 }
 
-                else if (HIBYTE(GetKeyState(VK_XBUTTON1)) != 1){
+                else if (!GetAsyncKeyState(VK_XBUTTON1)){
                     x1 = false;
                     event.mi.dwFlags += MOUSEEVENTF_XUP;
                     event.mi.mouseData += XBUTTON1;
                 }
 
-                if (HIBYTE(GetKeyState(VK_XBUTTON2)) == 1){
+                if (GetAsyncKeyState(VK_XBUTTON2)){
                     x2 = true;
                     event.mi.dwFlags += MOUSEEVENTF_XDOWN;
                     event.mi.mouseData += XBUTTON2;
                 }
 
-                else if (HIBYTE(GetKeyState(VK_XBUTTON2)) != 1){
+                else if (!GetAsyncKeyState(VK_XBUTTON2)){
                     x2 = false;
                     event.mi.dwFlags += MOUSEEVENTF_XUP;
                     event.mi.mouseData += XBUTTON2;

@@ -7,10 +7,13 @@ using namespace std;
 int main(){
 
     while(true){
-        if(GetKeyState(VK_ESCAPE)){
-            cout << "moving" << endl;
+        if(HIBYTE(GetAsyncKeyState(VK_LBUTTON))){
+            cout << "down" << endl;
         }
-        if(GetKeyState(VK_SPACE)){
+        if(!GetAsyncKeyState(VK_LBUTTON)){
+            cout << "up" << endl;
+        }
+        if(GetAsyncKeyState(VK_SPACE)){
             cout << "click" << endl;
             break;
         }

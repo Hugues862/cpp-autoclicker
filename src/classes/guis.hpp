@@ -111,7 +111,7 @@ class Gui {
 
         int main_loop() {
             while(main_loop_alive){
-
+                
                 //Close Event
                 SDL_Event event;
                 while (SDL_PollEvent(&event))

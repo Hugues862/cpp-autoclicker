@@ -86,8 +86,31 @@ class Windows {
                         display_edit_module_window = true;
                         selected_macro = row;
                     };
+
                     ImGui::PopID();
                     ImGui::PopStyleColor(2);
+                    ImGui::SameLine();
+
+                    // RECORD BUTTON
+                    ImGui::PushID(row);
+                    if (ImGui::Button("RECORD")) {
+                        
+                        (*it)->record();
+
+                    };
+
+                    ImGui::PopID();
+                    ImGui::SameLine();
+
+                    // PLAY BUTTON
+                    ImGui::PushID(row);
+                    if (ImGui::Button("PLAY")) {
+                        
+                        (*it)->play();
+
+                    };
+
+                    ImGui::PopID();
                     ImGui::SameLine();
 
                     //DUPLICATE BTN
@@ -134,7 +157,7 @@ class Windows {
                 ImGui::Text("Macro ID: %d", selected_macro);
                 ImGui::Text("Macro Name: %s", macros[selected_macro]->name);
                 if (ImGui::Button("New")) {
-                    macros[selected_macro]->movePos.push_back(new Click(100,200));
+                    macros[selected_macro]->movePos.push_back(new Click);
                 };
                 ImGui::Separator();
 
@@ -168,15 +191,15 @@ class Windows {
                         
                         char _x[10];
                         char _y[10];
-                        strcpy(_x, std::to_string((*it)->x).c_str());
-                        strcpy(_y, std::to_string((*it)->y).c_str());
+                        strcpy(_x, std::to_string((*it)->getX()).c_str());
+                        strcpy(_y, std::to_string((*it)->getY()).c_str());
 
                         ImGui::PushID(row);
                         ImGui::InputText("x", _x, 64, ImGuiInputTextFlags_CharsDecimal);
                         ImGui::InputText("y", _y, 64, ImGuiInputTextFlags_CharsDecimal);
                         ImGui::PopID();
-                        (*it)->x = atoi(_x);
-                        (*it)->y = atoi(_y);
+                        (*it)->setX(atoi(_x));
+                        (*it)->setY(atoi(_y));
 
 
                         //COL 2
