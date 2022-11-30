@@ -2,6 +2,7 @@
 #include <cstring>
 
 Macro::Macro() {
+
     string _name = "My Macro";
     strcpy(name, _name.c_str());
     this->loop = false;
@@ -17,16 +18,19 @@ Macro::Macro(Json::Value loader){
 }
 
 Macro::~Macro(){
+    this->clearVector();
+}
+
+void Macro::clearVector(){
 
     for (int i = 0; i < (int)this->movePos.size(); i++){
-
         delete this->movePos[i]; // Delete every Click object movePos is pointing to
-    
     }
 
     this->movePos.clear();
 }
 
+//! Revoir
 void Macro::setMovePos(int index, Click newClick){
 
     this->movePos[index] = &newClick;
@@ -40,25 +44,27 @@ Click Macro::getMovePos(int index){
 }
 
 bool Macro::play(){
-    
-    SDL_Event event;
+
+    INPUT input[this->movePos.size()] = {};
+    ZeroMemory(input, sizeof(input));
 
     for (int i = 0; i <= (int)this->movePos.size(); i++){
         
-        if (SDL_PollEvent(&event)){ // Stops creation of object
+        input[i] = this->movePos[i]->getInput();
             
-            if(SDLK_ESCAPE == event.key.keysym.sym){ // Escape will throw exception and in turn destroy object
+        if(GetKeyState(VK_ESCAPE)){ // Escape will throw exception and in turn destroy object
 
-                cout << "User Interruption" << endl;
-                return false;
+            cout << "User Interruption" << endl;
+            return false;
 
-            }
-        
-        }
+        } 
+    }
 
-        SDL_WarpMouseGlobal(this->movePos[i]->getX(),
-                            this->movePos[i]->getY());
-        
+    UINT sent = SendInput(ARRAYSIZE(input), input, sizeof(INPUT));
+
+    if (sent != ARRAYSIZE(input)){
+        cout << "SendInput Failed" << endl;
+        return false;
     }
 
     return true;
@@ -68,10 +74,12 @@ bool Macro::play(){
 void Macro::Record(){
 
     // SDL_CaptureMouse(SDL_TRUE);
-    SDL_Event event;
+    // SDL_Event event;
 
     // int button;
     // vector<Click>::iterator index;
+
+    this->clearVector();
 
     cout << "Begin Capture of cursor movement." << endl;
 
@@ -80,28 +88,25 @@ void Macro::Record(){
 
     while(true){
 
-        if (SDL_PollEvent(&event)){ // Stops creation of object
+        if(GetKeyState(VK_ESCAPE)){ // Escape will throw exception and in turn destroy object
+
+            cout << "User Interruption" << endl;
+            throw exception{};
+
+        }
+
+        else if(GetKeyState(VK_SPACE)){ // Space will stop registering mouse movement and confirm creation of object
             
-            if(SDLK_ESCAPE == event.key.keysym.sym){ // Escape will throw exception and in turn destroy object
+            // SDL_CaptureMouse(SDL_FALSE);
+            cout << "End Capture of cursor movement." << endl;
+            break;
 
-                throw exception{};
+        }
 
-            }
+        else if(GetKeyState(WM_MOUSEMOVE)){ // Wait for Mouse Movement or Mouse Click
 
-            else if(SDLK_SPACE == event.key.keysym.sym){ // Space will stop registering mouse movement and confirm creation of object
-                
-                // SDL_CaptureMouse(SDL_FALSE);
-                cout << "End Capture of cursor movement." << endl;
-                break;
-
-            }
-
-            else if(SDL_MOUSEMOTION == event.type || SDL_MOUSEBUTTONDOWN == event.type){ // Wait for Mouse Movement or Mouse Click
-
-                this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
-                this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
-
-            }
+            this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
+            this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
 
         }
 

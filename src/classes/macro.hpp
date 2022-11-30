@@ -19,12 +19,10 @@
             bool loop;
             int delay;
 
-
             vector<Click*> movePos; // Store the movement of the mouse
 
-
             /**
-             * @brief Creates object while registering every cursor position in a time frame
+             * @brief Creates object while registering every mouse event in a time frame
              * 
              */
             Macro();
@@ -43,6 +41,8 @@
              */
             ~Macro();
             
+            void clearVector();
+
             /**
              * @brief Set the Click object in the movePos vector at a specific index
              * 
@@ -63,7 +63,7 @@
              * @brief Replays the movement of the mouse registered in the vector movePos
              * 
              * @return true if replay was successful,
-             * @return false if function is interrupted by the user
+             * @return false if function is interrupted by the user or fails
              */
             bool play();
 

@@ -1,24 +1,19 @@
 #include <iostream>
 #include <string>
-#include <json\json.h>
+#include <windows.h>
 
 using namespace std;
 
 int main(){
 
-    Json::Reader read;
-    Json::Value root;
-
-    string test = "{ \"main\" : 123, \"main2\" : 123, \"main4\" : 123, },";
-    
-    bool parseSuccess = read.parse(test, root, false);
-    
-
-    cout << root << endl;
-
-    bool parseSucces = read.parse(test, root, false);
-
-    cout << endl << root << endl;
-
+    while(true){
+        if(GetKeyState(VK_ESCAPE)){
+            cout << "moving" << endl;
+        }
+        if(GetKeyState(VK_SPACE)){
+            cout << "click" << endl;
+            break;
+        }
+    }
     return 0;
 }

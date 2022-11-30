@@ -34,5 +34,8 @@
         "utility": "cpp",
         "filesystem": "cpp"
     },
-    "cSpell.words": ["SDLK"]
+    "cSpell.words": [
+        "ARRAYSIZE",
+        "SDLK"
+    ]
 }
