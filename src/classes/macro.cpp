@@ -45,26 +45,25 @@ Click Macro::getMovePos(int index){
 
 bool Macro::play(){
 
-    INPUT input[this->movePos.size()] = {}; //! Not freed, possible memory leak ?
-    ZeroMemory(input, sizeof(input));
-
     for (int i = 0; i <= (int)this->movePos.size(); i++){
+
+        SetCursorPos(this->movePos[i]->getX(), this->movePos[i]->getY());
         
-        input[i] = this->movePos[i]->getInput();
+        INPUT input = this->movePos[i]->getInput();
+        
+        UINT sent = SendInput(1, &input, sizeof(INPUT));
+
+        if (!sent){
+            cout << "SendInput Failed" << endl;
+            return false;
+        }
             
-        if(GetAsyncKeyState(VK_ESCAPE)){ // Escape will throw exception and in turn destroy object
+        if(GetAsyncKeyState(VK_ESCAPE)){ // Escape will throw exception and in turn destroy object 
 
             cout << "User Interruption" << endl;
             return false;
 
         } 
-    }
-
-    UINT sent = SendInput(ARRAYSIZE(input), input, sizeof(INPUT));
-
-    if (sent != ARRAYSIZE(input)){
-        cout << "SendInput Failed" << endl;
-        return false;
     }
 
     return true;
@@ -103,7 +102,66 @@ void Macro::record(){
 
         }
 
-        else if(GetAsyncKeyState(WM_MOUSEMOVE)){ // Wait for Mouse Movement or Mouse Click
+        if (GetAsyncKeyState(VK_LBUTTON)){
+
+            this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
+            this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
+
+            this->movePos.back()->left = true;
+            this->movePos.back()->event.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+            this->movePos.back()->event.mi.mouseData = 0;
+        
+        }
+
+
+        else if (GetAsyncKeyState(VK_RBUTTON)){
+
+            this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
+            this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
+
+            this->movePos.back()->right = true;
+            this->movePos.back()->event.mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
+            this->movePos.back()->event.mi.mouseData = 0;
+            
+        }
+
+
+        else if (GetAsyncKeyState(VK_MBUTTON)){
+
+            this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
+            this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
+
+            this->movePos.back()->mid = true;
+            this->movePos.back()->event.mi.dwFlags = MOUSEEVENTF_MIDDLEDOWN;
+            this->movePos.back()->event.mi.mouseData = 0;
+
+        }
+
+
+        else if (GetAsyncKeyState(VK_XBUTTON1)){
+
+            this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
+            this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
+
+            this->movePos.back()->x2 = true;
+            this->movePos.back()->event.mi.dwFlags = MOUSEEVENTF_XDOWN;
+            this->movePos.back()->event.mi.mouseData = XBUTTON1;
+            
+        }
+
+        else if (GetAsyncKeyState(VK_XBUTTON2)){
+
+            this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
+            this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
+
+            this->movePos.back()->x2 = true;
+            this->movePos.back()->event.mi.dwFlags = MOUSEEVENTF_XDOWN;
+            this->movePos.back()->event.mi.mouseData = XBUTTON2;
+
+        }
+
+
+        else { // Wait for Mouse Movement or Mouse Click
 
             this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
             this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state

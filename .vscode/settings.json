@@ -32,7 +32,9 @@
         "tuple": "cpp",
         "typeinfo": "cpp",
         "utility": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "thread": "cpp",
+        "future": "cpp"
     },
     "cSpell.words": [
         "ARRAYSIZE",

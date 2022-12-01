@@ -62,7 +62,7 @@ class Windows {
                 vector<Macro*>::iterator it;
 
                 int row = 0;
-                for (it = macros.begin(); it != macros.end(); it++)
+                for (it = macros.begin(); it != macros.end(); )
                 {
                     int color_modifier = 0;
                     ImGui::TableNextRow();
@@ -134,7 +134,12 @@ class Windows {
                     ImGui::PopID();
                     ImGui::PopStyleColor(2);
 
-                    row++;
+                    ++row;
+
+                    if (it != macros.end()){
+                        ++it;
+                    }
+                    
                     // 
                 }
                 ImGui::EndTable();

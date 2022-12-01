@@ -19,6 +19,7 @@
         public:
             
             INPUT event;
+            POINT pos;
             // int delay;
             bool left, right, mid, x1, x2;
 
@@ -27,77 +28,27 @@
              * 
              */
             Click(){
-
-                event.type = MOUSE_EVENT;
-                event.mi.time = 0;
-
-                POINT pos;
-                GetCursorPos(&pos);
-                event.mi.dx = pos.x;
-                event.mi.dx = pos.y;
+                left = false;
+                right = false;
+                mid = false;
+                x1 = false;
+                x2 = false;
                 
-                //! Checks for clicks
+                event.type = INPUT_MOUSE;
+                event.mi.dwFlags = MOUSEEVENTF_LEFTUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_MIDDLEUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_XUP, MOUSEEVENTF_XUP;
+                event.mi.mouseData = XBUTTON1, XBUTTON2;
+                GetCursorPos(&pos);
 
-                if (GetAsyncKeyState(VK_LBUTTON)){
-                    left = true;
-                    event.mi.dwFlags += MOUSEEVENTF_LEFTDOWN;
-                }
+            }
 
-                else if (!GetAsyncKeyState(VK_LBUTTON)){
-                    left = false;
-                    event.mi.dwFlags += MOUSEEVENTF_LEFTUP;
-                }
-
-                if (GetAsyncKeyState(VK_RBUTTON)){
-                    right = true;
-                    event.mi.dwFlags += MOUSEEVENTF_RIGHTDOWN;
-                }
-
-                else if (!GetAsyncKeyState(VK_RBUTTON)){
-                    right = false;
-                    event.mi.dwFlags += MOUSEEVENTF_RIGHTUP;
-                }
-
-                if (GetAsyncKeyState(VK_MBUTTON)){
-                    mid = true;
-                    event.mi.dwFlags += MOUSEEVENTF_MIDDLEDOWN;
-                }
-
-                else if (!GetAsyncKeyState(VK_MBUTTON)){
-                    mid = false;
-                    event.mi.dwFlags += MOUSEEVENTF_MIDDLEUP;
-                }
-
-                if (GetAsyncKeyState(VK_XBUTTON1)){
-                    x1 = true;
-                    event.mi.dwFlags += MOUSEEVENTF_XDOWN;
-                    event.mi.mouseData += XBUTTON1;
-                }
-
-                else if (!GetAsyncKeyState(VK_XBUTTON1)){
-                    x1 = false;
-                    event.mi.dwFlags += MOUSEEVENTF_XUP;
-                    event.mi.mouseData += XBUTTON1;
-                }
-
-                if (GetAsyncKeyState(VK_XBUTTON2)){
-                    x2 = true;
-                    event.mi.dwFlags += MOUSEEVENTF_XDOWN;
-                    event.mi.mouseData += XBUTTON2;
-                }
-
-                else if (!GetAsyncKeyState(VK_XBUTTON2)){
-                    x2 = false;
-                    event.mi.dwFlags += MOUSEEVENTF_XUP;
-                    event.mi.mouseData += XBUTTON2;
-                }
+            ~Click(){
 
             }
 
             // Getters
             INPUT getInput(){ return this->event; }
-            int getX(){ return (int)this->event.mi.dx; }
-            int getY(){ return (int)this->event.mi.dy; }
+            int getX(){ return (int)this->pos.x; }
+            int getY(){ return (int)this->pos.y; }
 
             // Setters
             void getInput(INPUT newEvent){ this->event = newEvent; }
@@ -109,24 +60,43 @@
             void checkLeft() {
 
                 left = !left;
-                if (left){ event.mi.dwFlags += MOUSEEVENTF_LEFTDOWN; }
-                else { event.mi.dwFlags -= MOUSEEVENTF_LEFTDOWN;}
+                if (left){
+                    event.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+                    event.mi.mouseData = 0;
+                }
+
+                else {
+                    event.mi.dwFlags = MOUSEEVENTF_LEFTUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_MIDDLEUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_XUP, MOUSEEVENTF_XUP;
+                    event.mi.mouseData = XBUTTON1, XBUTTON2;
+                }
 
             }
 
             void checkRight() {
 
                 right = !right;
-                if (right){ event.mi.dwFlags += MOUSEEVENTF_RIGHTDOWN; }
-                else { event.mi.dwFlags -= MOUSEEVENTF_RIGHTDOWN;}
+                if (right){
+                    event.mi.dwFlags += MOUSEEVENTF_RIGHTDOWN;
+                    event.mi.mouseData = 0;
+                }
+                else {
+                    event.mi.dwFlags = MOUSEEVENTF_LEFTUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_MIDDLEUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_XUP, MOUSEEVENTF_XUP;
+                    event.mi.mouseData = XBUTTON1, XBUTTON2;
+                }
 
             }
 
             void checkMid() {
 
                 mid = !mid;
-                if (mid){ event.mi.dwFlags += MOUSEEVENTF_MIDDLEDOWN; }
-                else { event.mi.dwFlags -= MOUSEEVENTF_MIDDLEDOWN;}
+                if (mid){
+                    event.mi.dwFlags += MOUSEEVENTF_MIDDLEDOWN;
+                    event.mi.mouseData = 0;
+                }
+                else {
+                    event.mi.dwFlags = MOUSEEVENTF_LEFTUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_MIDDLEUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_XUP, MOUSEEVENTF_XUP;
+                    event.mi.mouseData = XBUTTON1, XBUTTON2;
+                }
 
             }
 
@@ -138,8 +108,8 @@
                     event.mi.mouseData += XBUTTON1;
                 }
                 else {
-                    event.mi.dwFlags -= MOUSEEVENTF_XDOWN;
-                    event.mi.mouseData -= XBUTTON1;
+                    event.mi.dwFlags = MOUSEEVENTF_LEFTUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_MIDDLEUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_XUP, MOUSEEVENTF_XUP;
+                    event.mi.mouseData = XBUTTON1, XBUTTON2;
                 }
 
             }
@@ -152,8 +122,8 @@
                     event.mi.mouseData += XBUTTON2;
                 }
                 else {
-                    event.mi.dwFlags -= MOUSEEVENTF_XDOWN;
-                    event.mi.mouseData -= XBUTTON2;
+                    event.mi.dwFlags = MOUSEEVENTF_LEFTUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_MIDDLEUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_XUP, MOUSEEVENTF_XUP;
+                    event.mi.mouseData = XBUTTON1, XBUTTON2;
                 }
 
             }

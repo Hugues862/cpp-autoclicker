@@ -7,9 +7,15 @@
                 "${workspaceFolder}/src/SDL/include",
                 "${workspaceFolder}/src/SDL/lib",
                 "${workspaceFolder}/src/classes",
-                "${workspaceFolder}/src/jsoncpp/include"
+                "${workspaceFolder}/src/jsoncpp/include",
+                "${workspaceFolder}/src/imgui/backends",
+                "${workspaceFolder}/src/imgui"
             ],
-            "defines": ["_DEBUG", "UNICODE", "_UNICODE"],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
             "compilerPath": "C:/Program Files/mingw-w64/x86_64-8.1.0-release-posix-seh-rt_v6-rev0/mingw64/bin/g++.exe",
             "cStandard": "gnu17",
             "cppStandard": "gnu++14",
