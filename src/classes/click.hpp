@@ -3,6 +3,7 @@
 
     #include <windows.h>
     #include <iostream>
+    #include <json/json.h>
     #include <vector>
     #include <SDL.h>
 
@@ -35,8 +36,8 @@
                 x2 = false;
                 
                 event.type = INPUT_MOUSE;
-                event.mi.dwFlags = MOUSEEVENTF_LEFTUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_MIDDLEUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_XUP, MOUSEEVENTF_XUP;
-                event.mi.mouseData = XBUTTON1, XBUTTON2;
+                event.mi.dwFlags = (MOUSEEVENTF_LEFTUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_MIDDLEUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_XUP, MOUSEEVENTF_XUP);
+                event.mi.mouseData = (XBUTTON1, XBUTTON2);
                 GetCursorPos(&pos);
 
             }
@@ -61,13 +62,13 @@
 
                 left = !left;
                 if (left){
-                    event.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+                    event.mi.dwFlags = (MOUSEEVENTF_LEFTDOWN);
                     event.mi.mouseData = 0;
                 }
 
                 else {
-                    event.mi.dwFlags = MOUSEEVENTF_LEFTUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_MIDDLEUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_XUP, MOUSEEVENTF_XUP;
-                    event.mi.mouseData = XBUTTON1, XBUTTON2;
+                    event.mi.dwFlags = (MOUSEEVENTF_LEFTUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_MIDDLEUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_XUP, MOUSEEVENTF_XUP);
+                    event.mi.mouseData = (XBUTTON1, XBUTTON2);
                 }
 
             }
@@ -76,12 +77,12 @@
 
                 right = !right;
                 if (right){
-                    event.mi.dwFlags += MOUSEEVENTF_RIGHTDOWN;
+                    event.mi.dwFlags = (MOUSEEVENTF_RIGHTDOWN);
                     event.mi.mouseData = 0;
                 }
                 else {
-                    event.mi.dwFlags = MOUSEEVENTF_LEFTUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_MIDDLEUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_XUP, MOUSEEVENTF_XUP;
-                    event.mi.mouseData = XBUTTON1, XBUTTON2;
+                    event.mi.dwFlags = (MOUSEEVENTF_LEFTUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_MIDDLEUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_XUP, MOUSEEVENTF_XUP);
+                    event.mi.mouseData = (XBUTTON1, XBUTTON2);
                 }
 
             }
@@ -90,12 +91,12 @@
 
                 mid = !mid;
                 if (mid){
-                    event.mi.dwFlags += MOUSEEVENTF_MIDDLEDOWN;
+                    event.mi.dwFlags = (MOUSEEVENTF_MIDDLEDOWN);
                     event.mi.mouseData = 0;
                 }
                 else {
-                    event.mi.dwFlags = MOUSEEVENTF_LEFTUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_MIDDLEUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_XUP, MOUSEEVENTF_XUP;
-                    event.mi.mouseData = XBUTTON1, XBUTTON2;
+                    event.mi.dwFlags = (MOUSEEVENTF_LEFTUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_MIDDLEUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_XUP, MOUSEEVENTF_XUP);
+                    event.mi.mouseData = (XBUTTON1, XBUTTON2);
                 }
 
             }
@@ -104,12 +105,12 @@
 
                 x1 = !x1;
                 if (x1){
-                    event.mi.dwFlags += MOUSEEVENTF_XDOWN;
-                    event.mi.mouseData += XBUTTON1;
+                    event.mi.dwFlags = (MOUSEEVENTF_XDOWN);
+                    event.mi.mouseData = (XBUTTON1);
                 }
                 else {
-                    event.mi.dwFlags = MOUSEEVENTF_LEFTUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_MIDDLEUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_XUP, MOUSEEVENTF_XUP;
-                    event.mi.mouseData = XBUTTON1, XBUTTON2;
+                    event.mi.dwFlags = ((MOUSEEVENTF_LEFTUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_MIDDLEUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_XUP, MOUSEEVENTF_XUP));
+                    event.mi.mouseData = (XBUTTON1, XBUTTON2);
                 }
 
             }
@@ -118,12 +119,12 @@
 
                 x2 = !x2;
                 if (x2){
-                    event.mi.dwFlags += MOUSEEVENTF_XDOWN;
-                    event.mi.mouseData += XBUTTON2;
+                    event.mi.dwFlags = (MOUSEEVENTF_XDOWN);
+                    event.mi.mouseData = (XBUTTON2);
                 }
                 else {
-                    event.mi.dwFlags = MOUSEEVENTF_LEFTUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_MIDDLEUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_XUP, MOUSEEVENTF_XUP;
-                    event.mi.mouseData = XBUTTON1, XBUTTON2;
+                    event.mi.dwFlags = ((MOUSEEVENTF_LEFTUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_MIDDLEUP, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_XUP, MOUSEEVENTF_XUP));
+                    event.mi.mouseData = (XBUTTON1, XBUTTON2);
                 }
 
             }

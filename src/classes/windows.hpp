@@ -2,6 +2,8 @@
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_sdlrenderer.h"
 #include "macro.hpp"
+#include <thread>
+#include <future>
 #include <string> 
 
 
@@ -61,6 +63,9 @@ class Windows {
 
                 vector<Macro*>::iterator it;
 
+                future<void> recordThread;
+                future<bool> playThread;
+
                 int row = 0;
                 for (it = macros.begin(); it != macros.end(); )
                 {
@@ -95,7 +100,7 @@ class Windows {
                     ImGui::PushID(row);
                     if (ImGui::Button("RECORD")) {
                         
-                        (*it)->record();
+                        recordThread = std::async(std::launch::async, &Macro::record, (*it));
 
                     };
 
@@ -106,7 +111,7 @@ class Windows {
                     ImGui::PushID(row);
                     if (ImGui::Button("PLAY")) {
                         
-                        (*it)->play();
+                        playThread = std::async(std::launch::async, &Macro::play, (*it));
 
                     };
 

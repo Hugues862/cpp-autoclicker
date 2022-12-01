@@ -53,10 +53,10 @@ bool Macro::play(){
         
         UINT sent = SendInput(1, &input, sizeof(INPUT));
 
-        if (!sent){
-            cout << "SendInput Failed" << endl;
-            return false;
-        }
+        // if (!sent){
+        //     cout << "SendInput Failed" << endl;
+        //     return false;
+        // }
             
         if(GetAsyncKeyState(VK_ESCAPE)){ // Escape will throw exception and in turn destroy object 
 
@@ -108,7 +108,7 @@ void Macro::record(){
             this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
 
             this->movePos.back()->left = true;
-            this->movePos.back()->event.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+            this->movePos.back()->event.mi.dwFlags = (MOUSEEVENTF_LEFTDOWN);
             this->movePos.back()->event.mi.mouseData = 0;
         
         }
@@ -120,7 +120,7 @@ void Macro::record(){
             this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
 
             this->movePos.back()->right = true;
-            this->movePos.back()->event.mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
+            this->movePos.back()->event.mi.dwFlags = (MOUSEEVENTF_RIGHTDOWN);
             this->movePos.back()->event.mi.mouseData = 0;
             
         }
@@ -132,7 +132,7 @@ void Macro::record(){
             this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
 
             this->movePos.back()->mid = true;
-            this->movePos.back()->event.mi.dwFlags = MOUSEEVENTF_MIDDLEDOWN;
+            this->movePos.back()->event.mi.dwFlags = (MOUSEEVENTF_MIDDLEDOWN);
             this->movePos.back()->event.mi.mouseData = 0;
 
         }
@@ -144,8 +144,8 @@ void Macro::record(){
             this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
 
             this->movePos.back()->x2 = true;
-            this->movePos.back()->event.mi.dwFlags = MOUSEEVENTF_XDOWN;
-            this->movePos.back()->event.mi.mouseData = XBUTTON1;
+            this->movePos.back()->event.mi.dwFlags = (MOUSEEVENTF_XDOWN);
+            this->movePos.back()->event.mi.mouseData = (XBUTTON1);
             
         }
 
@@ -155,8 +155,8 @@ void Macro::record(){
             this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
 
             this->movePos.back()->x2 = true;
-            this->movePos.back()->event.mi.dwFlags = MOUSEEVENTF_XDOWN;
-            this->movePos.back()->event.mi.mouseData = XBUTTON2;
+            this->movePos.back()->event.mi.dwFlags = (MOUSEEVENTF_XDOWN);
+            this->movePos.back()->event.mi.mouseData = (XBUTTON2);
 
         }
 
