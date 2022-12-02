@@ -5,6 +5,7 @@
     #include <string>
     #include <json/json.h>
     #include <fstream>
+    #include <imgui.h>
 
     using namespace std;
 
@@ -18,6 +19,7 @@
             char name[64];
             bool loop;
             int delay;
+            int rec_play_delay;
 
             vector<Click*> movePos; // Store the movement of the mouse
 
@@ -27,6 +29,7 @@
              */
             Macro();
 
+            Macro(const Macro &copy);
 
             /**
              * @brief Load a Macro object from a Json file
@@ -65,7 +68,7 @@
              * @return true if replay was successful,
              * @return false if function is interrupted by the user or fails
              */
-            bool play();
+            void play();
 
             /**
              * @brief Loads an Macro object from a Json file
@@ -83,7 +86,6 @@
             Json::Value Save(Json::Value &out); // Save data with out stream //! https://stackoverflow.com/questions/32205981/reading-json-files-in-c
 
             void record();
-            
 
     };
 

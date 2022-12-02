@@ -1,5 +1,9 @@
 #include <macro.hpp>
 #include <cstring>
+#include <iostream>
+#include <time.h>
+#include <chrono>
+#include <thread>
 
 Macro::Macro() {
 
@@ -7,8 +11,20 @@ Macro::Macro() {
     strcpy(name, _name.c_str());
     this->loop = false;
     this->delay = 0;
+    this->rec_play_delay = 20;
+
 
     
+}
+
+Macro::Macro(const Macro &copy){
+
+    string _name = copy.name;
+    this->loop = copy.loop;
+    this->delay = copy.delay;
+    this->rec_play_delay = copy.rec_play_delay;
+
+
 }
 
 Macro::Macro(Json::Value loader){
@@ -43,15 +59,21 @@ Click Macro::getMovePos(int index){
 
 }
 
-bool Macro::play(){
+void Macro::play(){
 
-    for (int i = 0; i <= (int)this->movePos.size(); i++){
+    MOUSEINPUT input;
 
-        SetCursorPos(this->movePos[i]->getX(), this->movePos[i]->getY());
+    bool status = false;
+    for (int i = 0; i < (int)this->movePos.size(); i++){
+        Sleep(this->rec_play_delay);
         
-        INPUT input = this->movePos[i]->getInput();
+        status = SetCursorPos(this->movePos[i]->getX(), this->movePos[i]->getY());
+
+        mouse_event(this->movePos[i]->getInput().dwFlags, 0, 0, this->movePos[i]->getInput().mouseData, 0);
+        // ZeroMemory(&input, sizeof(INPUT));      
+        // input = this->movePos[i]->getInput();
         
-        UINT sent = SendInput(1, &input, sizeof(INPUT));
+        // UINT sent = SendInput(1, &input, sizeof(INPUT));
 
         // if (!sent){
         //     cout << "SendInput Failed" << endl;
@@ -61,14 +83,20 @@ bool Macro::play(){
         if(GetAsyncKeyState(VK_ESCAPE)){ // Escape will throw exception and in turn destroy object 
 
             cout << "User Interruption" << endl;
-            return false;
 
         } 
     }
 
-    return true;
-
 }
+
+    // SetCapture(GetCapture());
+    // WNDPROC Wndproc;
+
+    // LRESULT Wndproc(HWND hWin,
+    //                 UINT uMsg,
+    //                 WPARAM wParam,
+    //                 LPARAM lParam) {
+        
 
 void Macro::record(){
 
@@ -82,94 +110,83 @@ void Macro::record(){
 
     cout << "Begin Capture of cursor movement." << endl;
 
-    this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
+    bool leftDown = false;
+    bool rightDown = false;
+    bool midDown = false;
+
+    // this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
     this->movePos.push_back(new Click); // Add first pointer to new Click object with starting global coordinates of cursor
+    (*this->movePos.back()).event.dwFlags = 0;
 
     while(true){
 
+        DWORD left = 0;
+        DWORD right = 0;
+        DWORD mid = 0;
+        
         if(GetAsyncKeyState(VK_ESCAPE)){ // Escape will throw exception and in turn destroy object
 
             cout << "User Interruption" << endl;
-            throw exception{};
-
-        }
-
-        else if(GetAsyncKeyState(VK_SPACE)){ // Space will stop registering mouse movement and confirm creation of object
-            
-            // SDL_CaptureMouse(SDL_FALSE);
-            cout << "End Capture of cursor movement." << endl;
+            this->clearVector();
             break;
 
         }
 
-        if (GetAsyncKeyState(VK_LBUTTON)){
+        if(GetAsyncKeyState(VK_SPACE)){ // Space will stop registering mouse movement and confirm creation of object
+            
+            cout << "End Capture of cursor movement." << endl;
+            break;
 
-            this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
-            this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
-
-            this->movePos.back()->left = true;
-            this->movePos.back()->event.mi.dwFlags = (MOUSEEVENTF_LEFTDOWN);
-            this->movePos.back()->event.mi.mouseData = 0;
+        }
         
+        if (GetAsyncKeyState(VK_LBUTTON) && leftDown == false){
+
+            leftDown = true;
+            left = MOUSEEVENTF_LEFTDOWN;
         }
 
+        else if (!GetAsyncKeyState(VK_LBUTTON) && leftDown == true){
 
-        else if (GetAsyncKeyState(VK_RBUTTON)){
+            leftDown = false;
+            left = MOUSEEVENTF_LEFTUP;
+        }
 
-            this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
-            this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
+        if (GetAsyncKeyState(VK_RBUTTON) && rightDown == false){
 
-            this->movePos.back()->right = true;
-            this->movePos.back()->event.mi.dwFlags = (MOUSEEVENTF_RIGHTDOWN);
-            this->movePos.back()->event.mi.mouseData = 0;
+            rightDown = true;
+            right = MOUSEEVENTF_RIGHTDOWN;
             
         }
 
+        else if (!GetAsyncKeyState(VK_RBUTTON) && rightDown == true){
 
-        else if (GetAsyncKeyState(VK_MBUTTON)){
-
-            this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
-            this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
-
-            this->movePos.back()->mid = true;
-            this->movePos.back()->event.mi.dwFlags = (MOUSEEVENTF_MIDDLEDOWN);
-            this->movePos.back()->event.mi.mouseData = 0;
-
-        }
-
-
-        else if (GetAsyncKeyState(VK_XBUTTON1)){
-
-            this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
-            this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
-
-            this->movePos.back()->x2 = true;
-            this->movePos.back()->event.mi.dwFlags = (MOUSEEVENTF_XDOWN);
-            this->movePos.back()->event.mi.mouseData = (XBUTTON1);
+            rightDown = false;
+            right = MOUSEEVENTF_RIGHTUP;
             
         }
 
-        else if (GetAsyncKeyState(VK_XBUTTON2)){
+        if (GetAsyncKeyState(VK_MBUTTON) && midDown == false){
 
-            this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
-            this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
-
-            this->movePos.back()->x2 = true;
-            this->movePos.back()->event.mi.dwFlags = (MOUSEEVENTF_XDOWN);
-            this->movePos.back()->event.mi.mouseData = (XBUTTON2);
+            midDown = true;
+            mid = MOUSEEVENTF_MIDDLEDOWN;
 
         }
 
+        else if (!GetAsyncKeyState(VK_MBUTTON) && midDown == true){
 
-        else { // Wait for Mouse Movement or Mouse Click
-
-            this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
-            this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
-
+            midDown = false;
+            mid = MOUSEEVENTF_MIDDLEUP;
         }
+
+        Sleep(this->rec_play_delay);
+
+        // this->movePos.reserve(this->movePos.size() + 1); // Allocate space to avoid exception
+        this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
+        (*this->movePos.back()).event.dwFlags = (left | right | mid);
+
+        SDL_Log("size : %d", this->movePos.size());
 
     }
-
 }
 
 void Macro::Load(Json::Value &in){

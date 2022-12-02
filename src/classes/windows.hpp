@@ -2,10 +2,8 @@
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_sdlrenderer.h"
 #include "macro.hpp"
-#include <thread>
-#include <future>
 #include <string> 
-
+#include <thread>
 
 class Windows {
     
@@ -22,7 +20,7 @@ class Windows {
             
         };
 
-
+    
         int demo_window() {
             
 
@@ -63,9 +61,6 @@ class Windows {
 
                 vector<Macro*>::iterator it;
 
-                future<void> recordThread;
-                future<bool> playThread;
-
                 int row = 0;
                 for (it = macros.begin(); it != macros.end(); )
                 {
@@ -100,7 +95,9 @@ class Windows {
                     ImGui::PushID(row);
                     if (ImGui::Button("RECORD")) {
                         
-                        recordThread = std::async(std::launch::async, &Macro::record, (*it));
+                        auto lmRec = [](vector<Macro*>::iterator it){(*it)->record();};
+                        std::thread thread_obj(std::ref(lmRec), it);
+                        thread_obj.detach();
 
                     };
 
@@ -111,7 +108,9 @@ class Windows {
                     ImGui::PushID(row);
                     if (ImGui::Button("PLAY")) {
                         
-                        playThread = std::async(std::launch::async, &Macro::play, (*it));
+                        auto lmPlay = [](vector<Macro*>::iterator it){(*it)->play();};
+                        std::thread thread_obj(std::ref(lmPlay), it);
+                        thread_obj.detach();
 
                     };
 
@@ -121,6 +120,8 @@ class Windows {
                     //DUPLICATE BTN
                     ImGui::PushID(row);
                     if (ImGui::Button("DUPLICATE")) {
+                        
+                        // macros.push_back(new Macro = (*it));
                         std::cout << "DUPE " << row << std::endl;
                     };
                     ImGui::PopID();
