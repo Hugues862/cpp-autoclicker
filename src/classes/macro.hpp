@@ -17,7 +17,7 @@
 
         public:
             char name[64];
-            bool loop;
+            int loop;
             int delay;
             int rec_play_delay;
 
@@ -29,7 +29,7 @@
              */
             Macro();
 
-            Macro(const Macro &copy);
+            Macro(const Macro& copy);
 
             /**
              * @brief Load a Macro object from a Json file

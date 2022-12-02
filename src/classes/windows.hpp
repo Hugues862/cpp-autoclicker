@@ -92,17 +92,17 @@ class Windows {
                     ImGui::SameLine();
 
                     // RECORD BUTTON
-                    ImGui::PushID(row);
-                    if (ImGui::Button("RECORD")) {
+                    // ImGui::PushID(row);
+                    // if (ImGui::Button("RECORD")) {
                         
-                        auto lmRec = [](vector<Macro*>::iterator it){(*it)->record();};
-                        std::thread thread_obj(std::ref(lmRec), it);
-                        thread_obj.detach();
+                    //     auto lmRec = [](vector<Macro*>::iterator it){(*it)->record();};
+                    //     std::thread thread_obj(std::ref(lmRec), it);
+                    //     thread_obj.detach();
 
-                    };
+                    // };
 
-                    ImGui::PopID();
-                    ImGui::SameLine();
+                    // ImGui::PopID();
+                    // ImGui::SameLine();
 
                     // PLAY BUTTON
                     ImGui::PushID(row);
@@ -121,7 +121,8 @@ class Windows {
                     ImGui::PushID(row);
                     if (ImGui::Button("DUPLICATE")) {
                         
-                        // macros.push_back(new Macro = (*it));
+                        Macro newMacro = (*(*it));
+                        // macros.push_back(&newMacro);
                         std::cout << "DUPE " << row << std::endl;
                     };
                     ImGui::PopID();
@@ -167,9 +168,29 @@ class Windows {
                 ImGui::Begin("Edit Macro", &display_edit_module_window);
                 ImGui::Text("Macro ID: %d", selected_macro);
                 ImGui::Text("Macro Name: %s", macros[selected_macro]->name);
-                if (ImGui::Button("New")) {
-                    macros[selected_macro]->movePos.push_back(new Click);
+                // if (ImGui::Button("New")) {
+                //     macros[selected_macro]->movePos.push_back(new Click);
+                // };
+                ImGui::Separator();
+                ImGui::PushID("record");
+                if (ImGui::Button("RECORD")) {
+                    
+                    Macro* it = macros[selected_macro];
+                    auto lmRec = [](Macro* it){ it->record();};
+                    std::thread thread_obj(std::ref(lmRec), it);
+                    thread_obj.detach();
                 };
+                ImGui::PopID();
+
+
+
+
+                ImGui::InputInt("Loop : ", &macros[selected_macro]->loop);
+
+
+                ImGui::InputInt("Delay : ", &macros[selected_macro]->delay);
+
+
                 ImGui::Separator();
 
                 //List of Clicks

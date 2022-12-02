@@ -8,22 +8,32 @@
 Macro::Macro() {
 
     string _name = "My Macro";
-    strcpy(name, _name.c_str());
-    this->loop = false;
+    strcpy(this->name, _name.c_str());
+    this->loop = 0;
     this->delay = 0;
     this->rec_play_delay = 20;
-
-
     
 }
 
-Macro::Macro(const Macro &copy){
 
-    string _name = copy.name;
+Macro::Macro(const Macro& copy){
+
+    char *copyof = "Copy of";
+    strcpy(this->name, copy.name);
     this->loop = copy.loop;
     this->delay = copy.delay;
     this->rec_play_delay = copy.rec_play_delay;
 
+    this->movePos.reserve(copy.movePos.size());
+
+    for (int i = 0; i < copy.movePos.size(); i++){
+
+        Click newClick = (*copy.movePos[i]);
+        this->movePos.push_back(&newClick);
+
+    }
+
+    SDL_Log("Done copying");
 
 }
 
@@ -47,11 +57,11 @@ void Macro::clearVector(){
 }
 
 //! Revoir
-void Macro::setMovePos(int index, Click newClick){
+// void Macro::setMovePos(int index, Click newClick){
 
-    this->movePos[index] = &newClick;
+//     this->movePos[index] = &newClick;
 
-}
+// }
 
 Click Macro::getMovePos(int index){
 
@@ -61,50 +71,31 @@ Click Macro::getMovePos(int index){
 
 void Macro::play(){
 
-    MOUSEINPUT input;
+    for (int rpt = 0; rpt <= loop; rpt++){
 
-    bool status = false;
-    for (int i = 0; i < (int)this->movePos.size(); i++){
-        Sleep(this->rec_play_delay);
-        
-        status = SetCursorPos(this->movePos[i]->getX(), this->movePos[i]->getY());
+        MOUSEINPUT input;
 
-        mouse_event(this->movePos[i]->getInput().dwFlags, 0, 0, this->movePos[i]->getInput().mouseData, 0);
-        // ZeroMemory(&input, sizeof(INPUT));      
-        // input = this->movePos[i]->getInput();
-        
-        // UINT sent = SendInput(1, &input, sizeof(INPUT));
-
-        // if (!sent){
-        //     cout << "SendInput Failed" << endl;
-        //     return false;
-        // }
+        bool status = false;
+        for (int i = 0; i < (int)this->movePos.size(); i++){
+            Sleep(this->rec_play_delay);
             
-        if(GetAsyncKeyState(VK_ESCAPE)){ // Escape will throw exception and in turn destroy object 
+            status = SetCursorPos(this->movePos[i]->getX(), this->movePos[i]->getY());
 
-            cout << "User Interruption" << endl;
+            mouse_event(this->movePos[i]->getInput().dwFlags, 0, 0, this->movePos[i]->getInput().mouseData, 0);
+                
+            if(GetAsyncKeyState(VK_ESCAPE)){ // Escape will throw exception and in turn destroy object 
 
-        } 
+                cout << "User Interruption" << endl;
+
+            } 
+        }
+
+        Sleep(this->delay);
     }
 
 }
 
-    // SetCapture(GetCapture());
-    // WNDPROC Wndproc;
-
-    // LRESULT Wndproc(HWND hWin,
-    //                 UINT uMsg,
-    //                 WPARAM wParam,
-    //                 LPARAM lParam) {
-        
-
 void Macro::record(){
-
-    // SDL_CaptureMouse(SDL_TRUE);
-    // SDL_Event event;
-
-    // int button;
-    // vector<Click>::iterator index;
 
     this->clearVector();
 

@@ -33,6 +33,16 @@
                 event.mouseData = 0;
             }
 
+            Click(Click& copy){
+                
+                this->setX(copy.getX());
+                this->setY(copy.getY());
+
+                this->event.dwFlags = copy.getInput().dwFlags;
+                this->event.mouseData = copy.getInput().mouseData;
+
+            }
+
             ~Click(){
 
             }
