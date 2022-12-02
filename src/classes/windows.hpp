@@ -11,54 +11,47 @@ class Windows {
     
     public:
 
+        // Vectors
+        // Stores the macros
         vector<Macro*> macros;
+        // Stores the macros execution history
+        vector<Macro*> macros_history;
 
+        // Display or not certain windows
         bool display_edit_module_window = false;
         bool display_history_window = true;
 
+
         int selected_macro = 0;
 
-        vector<Macro*> macros_history;
 
         Windows() {
             
         };
 
-    
-        int demo_window() {
-            
-
-            ImGui::ShowDemoWindow();
-
-            return 0;
-        };
-
+        /**
+         * @brief Display the main window
+         */
         int main_window() {
+            // Main window setup
             const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-            
             ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 0, main_viewport->WorkPos.y + 0), ImGuiCond_FirstUseEver);
             ImGui::SetNextWindowSize(ImVec2(600, 800), ImGuiCond_FirstUseEver);
-
             ImGui::Begin("Autoclicker");                          // Create a window called "Hello, world!" and append into it.
 
-            
 
-
-
+            // New Macro Button
             if (ImGui::Button("New")) {
-
                 macros.push_back(new Macro);
             };
 
+            //Preparing the list of macros
             ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
-
             ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-
             ImGui::BeginChild("ListMacros", ImVec2(0, 0), true, window_flags);
             
             ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersH | ImGuiTableFlags_BordersOuterH
              | ImGuiTableFlags_BordersInnerH | ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuterV | ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersInner | ImGuiTableFlags_PadOuterX;
-
 
             if (ImGui::BeginTable("Macros", 2, flags))
             {
@@ -171,6 +164,9 @@ class Windows {
         };
 
 
+        /**
+         * @brief Display the edit module window
+         */
         int edit_module_window() {
             if (display_edit_module_window) {
                 const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
@@ -284,6 +280,7 @@ class Windows {
             return 0;
         };
 
+
         int history_window() {
             if (display_history_window) {
                 const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
@@ -294,14 +291,53 @@ class Windows {
                 
 
                 // int row = 0;
-                for (int i = 0; i < macros_history.size(); i ++){
-                    // ImGui::Text("%s",ImGui::GetTime());ImGui::SameLine();
-                    ImGui::Text("%s", macros_history[i]->name);
+                for (int i = 0; i < (int)macros_history.size(); i ++){
+                    ImGui::Text("%d | ", i);ImGui::SameLine();
+                    ImGui::Text("%s", macros_history[i]->name);ImGui::SameLine();
                     // row++
                 };
                 ImGui::End();
                 return 0;
 
             };
+            return 0;
+        };
+
+        Json::Value Save(){
+
+            Json::Reader read;
+            Json::Value root;
+
+            string json = "{\"macros\":[";
+            string add;
+
+            for (int i = 0; i < (int)macros.size(); i++){
+
+                add = macros[i]->Save();
+                json.append(add);
+
+            }
+            json.pop_back();
+
+            json.append("]}");
+            
+            SDL_Log("%s", json.c_str());
+            bool v = read.parse(json.c_str(), root, false);
+            if (!v) {
+                SDL_Log("Error parsing json");
+            }
+            return root;
+        }
+
+        //Cleanup
+        ~Windows () {
+            //Delete all macros
+            for (int i = 0; i < (int)macros.size(); i++) {
+                delete macros[i];
+            }
+            //Delete all macros history
+            for (int i = 0; i < (int)macros_history.size(); i++) {
+                delete macros_history[i];
+            }
         };
 };

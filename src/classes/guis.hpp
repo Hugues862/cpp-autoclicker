@@ -5,22 +5,26 @@
 #include "macro.hpp"
 #include <vector>
 #include "click.hpp"
+#include <json/value.h>
+#include <fstream>
 
-
+/**
+ * @brief The Gui class is used to control all the GUIs, also it inits the SDL as well as ImGui
+ **/
 class Gui {
     public:
         bool DEBUG;
         bool main_loop_alive = true;
         ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-        
+        //SDL COMPONENTS
         SDL_WindowFlags window_flags;
         SDL_Window* window;
         SDL_Renderer* renderer;
 
         Windows windows;
 
-
+        //Gui constructor, inits SDL and ImGui
         Gui(bool DEBUG = true) {
             
             this->DEBUG = DEBUG;
@@ -37,7 +41,8 @@ class Gui {
             ImGuiIO& io = ImGui::GetIO();
             io.Fonts->AddFontFromFileTTF("src/imgui/misc/fonts/Roboto-Medium.ttf", 18.0f, &font_config);
             // io.Fonts->AddFontDefault();
-
+            
+            // Disables .ini file
             // io.IniFilename = NULL;
             // io.LogFilename = NULL;
 
@@ -84,12 +89,9 @@ class Gui {
             IMGUI_CHECKVERSION();
             ImGui::CreateContext();
             ImGuiIO& io = ImGui::GetIO(); (void)io;
-            //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-            //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
-            // Setup Dear ImGui style
+            // Setup Dear ImGui style, light mode also available
             ImGui::StyleColorsDark();
-            //ImGui::StyleColorsLight();
 
             // Setup Platform/Renderer backends
             ImGui_ImplSDL2_InitForSDLRenderer(window, renderer);
@@ -109,10 +111,27 @@ class Gui {
             return 0;
         }
 
+        
         int main_loop() {
+            //Load Macros from JSON
+            Json::Reader reader;
+            Json::Value root;
+
+            std::ifstream file_input("saveFile/data.json");
+            reader.parse(file_input, root);
+
+            int sizeRoot = root["macros"].size();
+            // windows.macros.reserve(sizeRoot);
+
+            for (int i = 0; i < sizeRoot; i++){
+                SDL_Log("Macro %d", i);
+                windows.macros.push_back(new Macro);
+                windows.macros.back()->Load(root["macros"][i]);
+            }
+
             while(main_loop_alive){
                 
-                //Close Event
+                //Close Event, if the user clicks the X button or alt f4, etc...
                 SDL_Event event;
                 while (SDL_PollEvent(&event))
                 {
@@ -129,8 +148,12 @@ class Gui {
                 ImGui::NewFrame();
 
                 //WINDOWS
-                ImGui::ShowStackToolWindow();
-                windows.demo_window();
+                if (this->DEBUG == true) {
+                    ImGui::ShowDemoWindow();
+                    
+                }
+
+                
 
                 windows.main_window();
                 windows.edit_module_window();
@@ -138,7 +161,19 @@ class Gui {
 
                 rendering();
             }
+            
+            std::ofstream file_id;
+            file_id.open("saveFile/data.json");
+
+            Json::Value saveTmp = windows.Save();
+            //populate 'value_obj' with the objects, arrays etc.
+
+            Json::StyledWriter styledWriter;
+            file_id << styledWriter.write(saveTmp);
+
+            file_id.close();
             return 0;
+
         }
 
         ~Gui() {

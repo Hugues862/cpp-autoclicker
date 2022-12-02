@@ -3,6 +3,7 @@
 
     #include <windows.h>
     #include <iostream>
+    #include <fstream>
     #include <json/json.h>
     #include <vector>
     #include <SDL.h>
@@ -33,6 +34,11 @@
                 event.mouseData = 0;
             }
 
+            /**
+             * @brief Copy constructor of a new Click object
+             * 
+             * @param copy Copied Click object
+             */
             Click(Click& copy){
                 
                 this->setX(copy.getX());
@@ -43,6 +49,10 @@
 
             }
 
+            /**
+             * @brief Destroy the Click object
+             * 
+             */
             ~Click(){
 
             }
@@ -53,54 +63,57 @@
             int getY(){ return (int)this->pos.y; }
 
             // Setters
-            void getInput(MOUSEINPUT newEvent){ this->event = newEvent; }
+            void setInput(MOUSEINPUT newEvent){ this->event = newEvent; }
             void setX(int newX){ this->pos.x = newX; }
             void setY(int newY){ this->pos.y = newY; }
 
-            // void Load(Json::Value &in){
+            /**
+             * @brief Loads data from a Json Value to create a new Click object
+             * 
+             * @param loader Json data
+             */
+            void Load(Json::Value loader){
 
-            //     int size = in["movePos"].size();
+                
+                this->setX(loader["pos"]["x"].asInt());
+                this->setY(loader["pos"]["y"].asInt());
 
-            //     this->movePos.reserve(size);
+                this->event.dwFlags = loader["mouseEvent"]["flags"].asInt();
+                this->event.mouseData = loader["mouseEvent"]["mData"].asInt();
+                
 
-            //     for (int i = 0; i < size; i++){
+            }   
 
-            //         this->movePos.push_back(new Click);
-            //         this->movePos[i]->setX(in["movePos"][i]["x"].asInt());
-            //         this->movePos[i]->setY(in["movePos"][i]["y"].asInt());
+            /**
+             * @brief Outputs the object's data as string
+             * 
+             * @return string 
+             */
+            string Save(){
 
-            //     }
-            // }
+                string add;
+                string json = "{"; // start of object
 
-            // Json::Value Save(Json::Value &out){
+                json.append("\"pos\" :"); // start of obj in class
 
-            //     Json::Reader read;
-            //     Json::Value root;
+                add = "{ \"x\" : " + to_string(this->getX()) + 
+                        ", \"y\" : " + to_string(this->getY()) +
+                        "},";
 
-            //     string json = "{"; // start of object
+                json.append(add);
 
-            //     json.append("\"pos\" :"); // start of obj in class
+                json.append("\"mouseEvent\" :"); // start of obj in class
 
-            //     string add = "{ \"x\" : " + to_string(this->getX()) + 
-            //                 ", \"y\" : " + to_string(this->getY()) +
-            //                 "},";
-            //     json.append(add);
+                add = "{ \"flags\" : " + to_string(this->getInput().dwFlags) + 
+                        ", \"mData\" : " + to_string(this->getInput().mouseData) +
+                        "}";
 
-            //     json.append("\"mouseEvent\" :"); // start of obj in class
+                json.append(add);
 
-            //     string add = "{ \"flags\" : " + to_string(this->getX()) + 
-            //                 ", \"y\" : " + to_string(this->getY()) +
-            //                 "},";
-            //     json.append(add);
+                json.append("},"); // end of object
 
-
-            //     json.append("},"); // end of object
-
-            //     read.parse(json, root, false);
-            //     out.append(root);
-
-            //     return root;
-            // }
+                return json;
+            }
 
     };
 

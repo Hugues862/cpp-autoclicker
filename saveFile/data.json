@@ -1,0 +1,250 @@
+{
+    "macros" : [
+       {
+          "delay" : 0,
+          "loop" : 0,
+          "movePos" : [
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 502,
+                   "y" : 175
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 502,
+                   "y" : 178
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 502,
+                   "y" : 183
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 502,
+                   "y" : 189
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 504,
+                   "y" : 198
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 509,
+                   "y" : 207
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 518,
+                   "y" : 215
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 527,
+                   "y" : 222
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 536,
+                   "y" : 228
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 545,
+                   "y" : 232
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 554,
+                   "y" : 237
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 563,
+                   "y" : 240
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 571,
+                   "y" : 242
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 583,
+                   "y" : 244
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 596,
+                   "y" : 247
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 608,
+                   "y" : 249
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 620,
+                   "y" : 252
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 628,
+                   "y" : 254
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 636,
+                   "y" : 256
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 641,
+                   "y" : 257
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 641,
+                   "y" : 257
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 641,
+                   "y" : 257
+                }
+             },
+             {
+                "mouseEvent" : {
+                   "flags" : 0,
+                   "mData" : 0
+                },
+                "pos" : {
+                   "x" : 641,
+                   "y" : 257
+                }
+             }
+          ],
+          "name" : "My Macro",
+          "rpDelay" : 20
+       },
+       {
+          "delay" : 0,
+          "loop" : 0,
+          "movePos" : [],
+          "name" : "My Macro",
+          "rpDelay" : 20
+       }
+    ]
+ }
+ 
