@@ -87,7 +87,10 @@
              */
             string Save(); // Save data with out stream //! https://stackoverflow.com/questions/32205981/reading-json-files-in-c
 
-
+            /**
+             * @brief Records the mouse events during a time frame and puts them into a vector
+             * 
+             */
             void record();
 
     };

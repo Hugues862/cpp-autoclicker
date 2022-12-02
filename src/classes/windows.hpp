@@ -36,7 +36,7 @@ class Windows {
             // Main window setup
             const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
             ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 0, main_viewport->WorkPos.y + 0), ImGuiCond_FirstUseEver);
-            ImGui::SetNextWindowSize(ImVec2(600, 800), ImGuiCond_FirstUseEver);
+            ImGui::SetNextWindowSize(ImVec2(600, 900), ImGuiCond_FirstUseEver);
             ImGui::Begin("Autoclicker");                          // Create a window called "Hello, world!" and append into it.
 
 
@@ -67,6 +67,7 @@ class Windows {
                     ImGui::TableNextColumn();
                     ImGui::Text("%d |", row); ImGui::SameLine();
                     ImGui::PushID(row);
+                    //When name modified, update the macro name
                     ImGui::InputText("", (*it)->name, 64);
                     ImGui::PopID();
 
@@ -79,6 +80,7 @@ class Windows {
                     ImGui::PushID(row);
                     ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(color_modifier / 7.0f, 0.6f, 0.6f));
                     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(color_modifier / 7.0f, 0.7f, 0.7f));
+                    //When button clicked, display the edit window
                     if (ImGui::Button("EDIT")) {
                         display_edit_module_window = true;
                         selected_macro = row;
@@ -91,9 +93,14 @@ class Windows {
                     // RECORD BUTTON
                     ImGui::PushID(row);
                     if (ImGui::Button("RECORD")) {
-                        
+                        //
+                        //Horrible to do, hate threading in C++
+                        //Create a lambda function that takes in an iterator it and executes the record function of the macro
+                        //Create a new thread from the lambda function
+                        //This is non optional or te program crash, ImGui doesn't like when nothing is displayed for a long time
                         auto lmRec = [](vector<Macro*>::iterator it){(*it)->record();};
                         std::thread thread_obj(std::ref(lmRec), it);
+                        //Detach the thread so it doesn't wait for the end of the program
                         thread_obj.detach();
 
                     };
@@ -107,13 +114,12 @@ class Windows {
                         
                         if ((*it)->movePos.size() != 0) {
 
+                            //Same as comment above ^^
                             auto lmPlay = [](vector<Macro*>::iterator it){(*it)->play();};
                             std::thread thread_obj(std::ref(lmPlay), it);
                             thread_obj.detach();
                             macros_history.emplace(macros_history.begin(), (*it));
                         }
-
-                        // SDL_Log("%s",(*it)->name);
 
                     };
 
@@ -121,6 +127,8 @@ class Windows {
                     ImGui::SameLine();
 
                     //DUPLICATE BTN
+                    //Could not make it work in time unfortunately
+                    //
                     // ImGui::PushID(row);
                     // if (ImGui::Button("DUPLICATE")) {
                         
@@ -139,6 +147,7 @@ class Windows {
                     ImGui::PushID(row);
                     ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(color_modifier / 7.0f, 0.6f, 0.6f));
                     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(color_modifier / 7.0f, 0.7f, 0.7f));
+                    //Remove macro from vector when DELETE button clicked
                     if (ImGui::Button("DELETE")) {
                         macros.erase(it);
                     };
@@ -171,7 +180,7 @@ class Windows {
             if (display_edit_module_window) {
                 const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
                 ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 600, main_viewport->WorkPos.y + 0), ImGuiCond_FirstUseEver);
-                ImGui::SetNextWindowSize(ImVec2(400, 800), ImGuiCond_FirstUseEver);
+                ImGui::SetNextWindowSize(ImVec2(400, 900), ImGuiCond_FirstUseEver);
                 ImGui::Begin("Edit Macro", &display_edit_module_window);
                 ImGui::Text("Macro ID: %d", selected_macro);
                 ImGui::Text("Macro Name: %s", macros[selected_macro]->name);
@@ -193,16 +202,19 @@ class Windows {
 
                
                 
-
+                //Loop, display input
                 ImGui::InputInt("Loop : ", &macros[selected_macro]->loop);
+                //If loop is -1, display infinite loop
                 if (macros[selected_macro]->loop == -1) {
                     ImGui::SameLine();
                     ImGui::Text("Repeat Indefinitely");
                 }
+                //If user try to set loop less than -1, block him
                 if (macros[selected_macro]->loop < -1) {
                     macros[selected_macro]->loop = -1;
                 }
 
+                //Delay
                 ImGui::InputInt("Delay (ms) : ", &macros[selected_macro]->delay);
 
 
@@ -218,7 +230,7 @@ class Windows {
                 ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersH | ImGuiTableFlags_BordersOuterH
                 | ImGuiTableFlags_BordersInnerH | ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuterV | ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersInner | ImGuiTableFlags_PadOuterX;
 
-
+                //List of clicks
                 if (ImGui::BeginTable("Clicks", 2, flags))
                 {
 
@@ -280,20 +292,22 @@ class Windows {
             return 0;
         };
 
-
+        
         int history_window() {
             if (display_history_window) {
                 const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-                ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 1600, main_viewport->WorkPos.y + 0), ImGuiCond_FirstUseEver);
-                ImGui::SetNextWindowSize(ImVec2(200, 800), ImGuiCond_FirstUseEver);
+                ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 1000, main_viewport->WorkPos.y + 0), ImGuiCond_FirstUseEver);
+                ImGui::SetNextWindowSize(ImVec2(200, 900), ImGuiCond_FirstUseEver);
                 ImGui::Begin("Macro History", &display_history_window);
                 
                 
 
                 // int row = 0;
+
+                // fetch history from vector
                 for (int i = 0; i < (int)macros_history.size(); i ++){
                     ImGui::Text("%d | ", i);ImGui::SameLine();
-                    ImGui::Text("%s", macros_history[i]->name);ImGui::SameLine();
+                    ImGui::Text("%s", macros_history[i]->name);
                     // row++
                 };
                 ImGui::End();
@@ -303,6 +317,11 @@ class Windows {
             return 0;
         };
 
+        /**
+         * @brief Uses Json Value to export all data from previous session
+         * 
+         * @return Json::Value 
+         */
         Json::Value Save(){
 
             Json::Reader read;

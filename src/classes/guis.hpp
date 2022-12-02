@@ -25,7 +25,7 @@ class Gui {
         Windows windows;
 
         //Gui constructor, inits SDL and ImGui
-        Gui(bool DEBUG = true) {
+        Gui(bool DEBUG = false) {
             
             this->DEBUG = DEBUG;
             
@@ -43,8 +43,8 @@ class Gui {
             // io.Fonts->AddFontDefault();
             
             // Disables .ini file
-            // io.IniFilename = NULL;
-            // io.LogFilename = NULL;
+            io.IniFilename = NULL;
+            io.LogFilename = NULL;
 
             main_loop();
             
@@ -60,7 +60,7 @@ class Gui {
 
             // Setup window
             window_flags = (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-            window = SDL_CreateWindow("Dear ImGui SDL2+SDL_Renderer example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1800, 900, window_flags);
+            window = SDL_CreateWindow("Dear ImGui SDL2+SDL_Renderer example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1200, 900, window_flags);
             if (NULL == window){
                 std::cout << "Couldn't create the window" << std::endl << SDL_GetError() << std::endl;
                 return 0;
