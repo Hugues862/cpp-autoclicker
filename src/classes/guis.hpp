@@ -55,7 +55,7 @@ class Gui {
 
             // Setup window
             window_flags = (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-            window = SDL_CreateWindow("Dear ImGui SDL2+SDL_Renderer example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1200, 900, window_flags);
+            window = SDL_CreateWindow("Dear ImGui SDL2+SDL_Renderer example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1800, 900, window_flags);
             if (NULL == window){
                 std::cout << "Couldn't create the window" << std::endl << SDL_GetError() << std::endl;
                 return 0;
@@ -134,7 +134,7 @@ class Gui {
 
                 windows.main_window();
                 windows.edit_module_window();
-
+                windows.history_window();
 
                 rendering();
             }

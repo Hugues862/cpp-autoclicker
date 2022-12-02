@@ -17,23 +17,40 @@ Macro::Macro() {
 
 
 Macro::Macro(const Macro& copy){
-
     char *copyof = "Copy of";
     strcpy(this->name, copy.name);
     this->loop = copy.loop;
     this->delay = copy.delay;
     this->rec_play_delay = copy.rec_play_delay;
 
-    this->movePos.reserve(copy.movePos.size());
 
     for (int i = 0; i < copy.movePos.size(); i++){
 
-        Click newClick = (*copy.movePos[i]);
-        this->movePos.push_back(&newClick);
-
+        Click *newClick = new Click((*copy.movePos[i]));
+        this->movePos.push_back(newClick);
+        
     }
 
-    SDL_Log("Done copying");
+
+    SDL_Log("THIS");
+    SDL_Log("name : %s", this->name);
+    SDL_Log("loop : %d", this->loop);
+    SDL_Log("delay : %d", this->delay);
+    SDL_Log("rec_play_delay : %d", this->rec_play_delay);
+    
+    SDL_Log("posx: %d", this->movePos[1]->getX());
+    SDL_Log("posy : %d", this->movePos[1]->getY());
+    // SDL_Log("FLAGS : %d", this->movePos[1]->getY());
+    
+    SDL_Log("COPY");
+    SDL_Log("name : %s", copy.name);
+    SDL_Log("loop : %d", copy.loop);
+    SDL_Log("delay : %d", copy.delay);
+    SDL_Log("rec_play_delay : %d", copy.rec_play_delay);
+
+    SDL_Log("posx: %d", copy.movePos[1]->getX());
+    SDL_Log("posy : %d", copy.movePos[1]->getY());
+    
 
 }
 
@@ -83,12 +100,38 @@ void Macro::play(){
 
             mouse_event(this->movePos[i]->getInput().dwFlags, 0, 0, this->movePos[i]->getInput().mouseData, 0);
                 
-            if(GetAsyncKeyState(VK_ESCAPE)){ // Escape will throw exception and in turn destroy object 
-
-                cout << "User Interruption" << endl;
-
-            } 
         }
+
+        if(GetAsyncKeyState(VK_ESCAPE)){ 
+
+            cout << "User Interruption" << endl;
+            break;
+
+        } 
+
+        Sleep(this->delay);
+    }
+
+    while(loop == -1){
+
+        MOUSEINPUT input;
+
+        bool status = false;
+        for (int i = 0; i < (int)this->movePos.size(); i++){
+            Sleep(this->rec_play_delay);
+            
+            status = SetCursorPos(this->movePos[i]->getX(), this->movePos[i]->getY());
+
+            mouse_event(this->movePos[i]->getInput().dwFlags, 0, 0, this->movePos[i]->getInput().mouseData, 0);
+                
+        }
+
+        if(GetAsyncKeyState(VK_ESCAPE)){
+
+            cout << "User Interruption" << endl;
+            break;
+
+        } 
 
         Sleep(this->delay);
     }
@@ -221,3 +264,4 @@ Json::Value Macro::Save(Json::Value &out){
 
     return root;
 }
+

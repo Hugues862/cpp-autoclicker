@@ -4,6 +4,7 @@
 #include "macro.hpp"
 #include <string> 
 #include <thread>
+#include <time.h>
 
 class Windows {
     
@@ -13,8 +14,11 @@ class Windows {
         vector<Macro*> macros;
 
         bool display_edit_module_window = false;
+        bool display_history_window = true;
+
         int selected_macro = 0;
 
+        vector<Macro*> macros_history;
 
         Windows() {
             
@@ -92,24 +96,11 @@ class Windows {
                     ImGui::SameLine();
 
                     // RECORD BUTTON
-                    // ImGui::PushID(row);
-                    // if (ImGui::Button("RECORD")) {
-                        
-                    //     auto lmRec = [](vector<Macro*>::iterator it){(*it)->record();};
-                    //     std::thread thread_obj(std::ref(lmRec), it);
-                    //     thread_obj.detach();
-
-                    // };
-
-                    // ImGui::PopID();
-                    // ImGui::SameLine();
-
-                    // PLAY BUTTON
                     ImGui::PushID(row);
-                    if (ImGui::Button("PLAY")) {
+                    if (ImGui::Button("RECORD")) {
                         
-                        auto lmPlay = [](vector<Macro*>::iterator it){(*it)->play();};
-                        std::thread thread_obj(std::ref(lmPlay), it);
+                        auto lmRec = [](vector<Macro*>::iterator it){(*it)->record();};
+                        std::thread thread_obj(std::ref(lmRec), it);
                         thread_obj.detach();
 
                     };
@@ -117,16 +108,36 @@ class Windows {
                     ImGui::PopID();
                     ImGui::SameLine();
 
-                    //DUPLICATE BTN
+                    // PLAY BUTTON
                     ImGui::PushID(row);
-                    if (ImGui::Button("DUPLICATE")) {
+                    if (ImGui::Button("PLAY")) {
                         
-                        Macro newMacro = (*(*it));
-                        // macros.push_back(&newMacro);
-                        std::cout << "DUPE " << row << std::endl;
+                        if ((*it)->movePos.size() != 0) {
+
+                            auto lmPlay = [](vector<Macro*>::iterator it){(*it)->play();};
+                            std::thread thread_obj(std::ref(lmPlay), it);
+                            thread_obj.detach();
+                            macros_history.emplace(macros_history.begin(), (*it));
+                        }
+
+                        // SDL_Log("%s",(*it)->name);
+
                     };
+
                     ImGui::PopID();
                     ImGui::SameLine();
+
+                    //DUPLICATE BTN
+                    // ImGui::PushID(row);
+                    // if (ImGui::Button("DUPLICATE")) {
+                        
+                    //     Macro* newMacro = new Macro(*(*it));
+                    //     macros.emplace_back(newMacro);
+
+                    //     // std::cout << "DUPE " << row << std::endl;
+                    // };
+                    // ImGui::PopID();
+                    // ImGui::SameLine();
 
 
                     //DELETE BTN
@@ -172,23 +183,31 @@ class Windows {
                 //     macros[selected_macro]->movePos.push_back(new Click);
                 // };
                 ImGui::Separator();
-                ImGui::PushID("record");
-                if (ImGui::Button("RECORD")) {
+                // ImGui::PushID("record");
+                // if (ImGui::Button("RECORD")) {
                     
-                    Macro* it = macros[selected_macro];
-                    auto lmRec = [](Macro* it){ it->record();};
-                    std::thread thread_obj(std::ref(lmRec), it);
-                    thread_obj.detach();
-                };
-                ImGui::PopID();
+                //     Macro* it = macros[selected_macro];
+                //     auto lmRec = [](Macro* it){ it->record();};
+                //     std::thread thread_obj(std::ref(lmRec), it);
+                //     thread_obj.detach();
+                // };
+                // ImGui::PopID();
+                // ImGui::SameLine();
 
 
-
+               
+                
 
                 ImGui::InputInt("Loop : ", &macros[selected_macro]->loop);
+                if (macros[selected_macro]->loop == -1) {
+                    ImGui::SameLine();
+                    ImGui::Text("Repeat Indefinitely");
+                }
+                if (macros[selected_macro]->loop < -1) {
+                    macros[selected_macro]->loop = -1;
+                }
 
-
-                ImGui::InputInt("Delay : ", &macros[selected_macro]->delay);
+                ImGui::InputInt("Delay (ms) : ", &macros[selected_macro]->delay);
 
 
                 ImGui::Separator();
@@ -265,4 +284,24 @@ class Windows {
             return 0;
         };
 
+        int history_window() {
+            if (display_history_window) {
+                const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+                ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 1600, main_viewport->WorkPos.y + 0), ImGuiCond_FirstUseEver);
+                ImGui::SetNextWindowSize(ImVec2(200, 800), ImGuiCond_FirstUseEver);
+                ImGui::Begin("Macro History", &display_history_window);
+                
+                
+
+                // int row = 0;
+                for (int i = 0; i < macros_history.size(); i ++){
+                    // ImGui::Text("%s",ImGui::GetTime());ImGui::SameLine();
+                    ImGui::Text("%s", macros_history[i]->name);
+                    // row++
+                };
+                ImGui::End();
+                return 0;
+
+            };
+        };
 };
