@@ -29,14 +29,13 @@
              */
             Macro();
 
+            /**
+             * @brief Copy constructor of a new Macro object
+             * 
+             * @param copy Copied object
+             */
             Macro(const Macro& copy);
 
-            /**
-             * @brief Load a Macro object from a Json file
-             * 
-             * @param loader Json value of the object
-             */
-            Macro(Json::Value loader);
 
             /**
              * @brief Destroy the Macro object
@@ -44,6 +43,10 @@
              */
             ~Macro();
             
+            /**
+             * @brief Clears the movePostion vector for reusability
+             * 
+             */
             void clearVector();
 
             /**
@@ -75,15 +78,15 @@
              * 
              * @param in Json file containing the object to load
              */
-            void Load(Json::Value &in); // Load data from in stream //! https://stackoverflow.com/questions/11365456/saving-and-loading-data-to-a-file-c-beginner
+            void Load(Json::Value loader); // Load data from in stream //! https://stackoverflow.com/questions/11365456/saving-and-loading-data-to-a-file-c-beginner
             
             /**
-             * @brief Appends object Data as Json to a Json file
+             * @brief Outputs the object's data as string
              * 
-             * @param out Json file that will get updated
-             * @return Json::Value with the data of the object
+             * @return string 
              */
-            Json::Value Save(Json::Value &out); // Save data with out stream //! https://stackoverflow.com/questions/32205981/reading-json-files-in-c
+            string Save(); // Save data with out stream //! https://stackoverflow.com/questions/32205981/reading-json-files-in-c
+
 
             void record();
 

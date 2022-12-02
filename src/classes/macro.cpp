@@ -17,46 +17,39 @@ Macro::Macro() {
 
 
 Macro::Macro(const Macro& copy){
-    char *copyof = "Copy of";
+    // char *copyof = "Copy of";
     strcpy(this->name, copy.name);
     this->loop = copy.loop;
     this->delay = copy.delay;
     this->rec_play_delay = copy.rec_play_delay;
 
 
-    for (int i = 0; i < copy.movePos.size(); i++){
+    for (int i = 0; i < (int)copy.movePos.size(); i++){
 
         Click *newClick = new Click((*copy.movePos[i]));
         this->movePos.push_back(newClick);
         
     }
 
-
-    SDL_Log("THIS");
-    SDL_Log("name : %s", this->name);
-    SDL_Log("loop : %d", this->loop);
-    SDL_Log("delay : %d", this->delay);
-    SDL_Log("rec_play_delay : %d", this->rec_play_delay);
+    // SDL_Log("THIS");
+    // SDL_Log("name : %s", this->name);
+    // SDL_Log("loop : %d", this->loop);
+    // SDL_Log("delay : %d", this->delay);
+    // SDL_Log("rec_play_delay : %d", this->rec_play_delay);
     
-    SDL_Log("posx: %d", this->movePos[1]->getX());
-    SDL_Log("posy : %d", this->movePos[1]->getY());
-    // SDL_Log("FLAGS : %d", this->movePos[1]->getY());
+    // SDL_Log("posx: %d", this->movePos[1]->getX());
+    // SDL_Log("posy : %d", this->movePos[1]->getY());
+    // // SDL_Log("FLAGS : %d", this->movePos[1]->getY());
     
-    SDL_Log("COPY");
-    SDL_Log("name : %s", copy.name);
-    SDL_Log("loop : %d", copy.loop);
-    SDL_Log("delay : %d", copy.delay);
-    SDL_Log("rec_play_delay : %d", copy.rec_play_delay);
+    // SDL_Log("COPY");
+    // SDL_Log("name : %s", copy.name);
+    // SDL_Log("loop : %d", copy.loop);
+    // SDL_Log("delay : %d", copy.delay);
+    // SDL_Log("rec_play_delay : %d", copy.rec_play_delay);
 
-    SDL_Log("posx: %d", copy.movePos[1]->getX());
-    SDL_Log("posy : %d", copy.movePos[1]->getY());
+    // SDL_Log("posx: %d", copy.movePos[1]->getX());
+    // SDL_Log("posy : %d", copy.movePos[1]->getY());
     
-
-}
-
-Macro::Macro(Json::Value loader){
-
-    this->Load(loader);
 
 }
 
@@ -90,13 +83,11 @@ void Macro::play(){
 
     for (int rpt = 0; rpt <= loop; rpt++){
 
-        MOUSEINPUT input;
 
-        bool status = false;
         for (int i = 0; i < (int)this->movePos.size(); i++){
             Sleep(this->rec_play_delay);
             
-            status = SetCursorPos(this->movePos[i]->getX(), this->movePos[i]->getY());
+            SetCursorPos(this->movePos[i]->getX(), this->movePos[i]->getY());
 
             mouse_event(this->movePos[i]->getInput().dwFlags, 0, 0, this->movePos[i]->getInput().mouseData, 0);
                 
@@ -114,13 +105,10 @@ void Macro::play(){
 
     while(loop == -1){
 
-        MOUSEINPUT input;
-
-        bool status = false;
         for (int i = 0; i < (int)this->movePos.size(); i++){
             Sleep(this->rec_play_delay);
             
-            status = SetCursorPos(this->movePos[i]->getX(), this->movePos[i]->getY());
+            SetCursorPos(this->movePos[i]->getX(), this->movePos[i]->getY());
 
             mouse_event(this->movePos[i]->getInput().dwFlags, 0, 0, this->movePos[i]->getInput().mouseData, 0);
                 
@@ -218,50 +206,69 @@ void Macro::record(){
         this->movePos.push_back(new Click); // Add pointer to new Click object with current global coordinates of cursor and mouse button state
         (*this->movePos.back()).event.dwFlags = (left | right | mid);
 
-        SDL_Log("size : %d", this->movePos.size());
 
     }
 }
 
-void Macro::Load(Json::Value &in){
+void Macro::Load(Json::Value loader){
+    SDL_Log("Macro::Load(Json::Value loader)");
+    int size = loader["movePos"].size();
 
-    int size = in["movePos"].size();
-
-    this->movePos.reserve(size);
+    // this->movePos.reserve(size);
 
     for (int i = 0; i < size; i++){
-
+        SDL_Log("CLick i : %d", i);
         this->movePos.push_back(new Click);
-        this->movePos[i]->setX(in["movePos"][i]["x"].asInt());
-        this->movePos[i]->setY(in["movePos"][i]["y"].asInt());
+        this->movePos.back()->Load(loader["movePos"][i]);
 
     }
+
+    strcpy(this->name, loader["name"].asString().c_str());
+    this->loop = loader["loop"].asInt();
+    this->delay = loader["delay"].asInt();
+    this->rec_play_delay = loader["rpDelay"].asInt();
+
 }
 
-Json::Value Macro::Save(Json::Value &out){
+string Macro::Save(){
 
-    Json::Reader read;
-    Json::Value root;
     int size = this->movePos.size();
+    string add;
 
     string json = "{"; // start of object
 
-    json.append("\"movePos\" :"); // start of variables in obj
+    json.append("\"name\" :"); // start of variables in obj
+
+    add = "\""+(string)this->name + "\",";
+    json.append(add);
+
+    json.append("\"loop\" :"); // start of variables in obj
+    add = to_string(this->loop)+ ",";
+    json.append(add);
+
+    json.append("\"delay\" :"); // start of variables in obj
+    add = to_string(this->delay) + ",";
+    json.append(add);
+
+    json.append("\"rpDelay\" :"); // start of variables in obj
+    add = to_string(this->rec_play_delay) + ",";
+    json.append(add);
+
+    json.append("\"movePos\" : ["); // start of variables in obj
 
     for (int i = 0; i < size; i++){ // number of elements in vector movePos
         
-        string add = "{ \"x\" : " + to_string(this->movePos[i]->getX()) + 
-                      ", \"y\" : " + to_string(this->movePos[i]->getY()) +
-                      "},";
-        json.append(add);
+        json.append(this->movePos[i]->Save());
 
     }
+    if(size){
+        json.pop_back();
+    }
+
+    json.append("]");
 
     json.append("},"); // end of object
 
-    read.parse(json, root, false);
-    out.append(root);
-
-    return root;
+    return json;
 }
 
